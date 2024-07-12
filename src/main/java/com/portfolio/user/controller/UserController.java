@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.portfolio.user.dto.UserDto.NaverUserProfile;
+import com.portfolio.user.dto.UserDto.UserInfo;
 import com.portfolio.user.dto.UserRequest.NaverLoginRequest;
 import com.portfolio.user.dto.UserResponse;
 import com.portfolio.user.dto.UserResponse.LoginResponse;
 import com.portfolio.user.service.NaverLoginService;
 import com.portfolio.user.service.NaverLoginServiceImpl;
+import com.portfolio.user.service.UserService;
+import com.portfolio.utils.JwtUtil;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,8 +37,14 @@ public class UserController {
 	@Autowired
 	private NaverLoginService naverLoginService;
 	
+	@Autowired
+	private JwtUtil jwtUtil;
+	
+	@Autowired
+	UserService userService;
+	
     @PostMapping("/login/naver")
-    public ResponseEntity<String> createTodo(@RequestBody NaverLoginRequest naverLoginRequest,HttpServletResponse httpServletResponse) {
+    public ResponseEntity<String> loginNaver(@RequestBody NaverLoginRequest naverLoginRequest,HttpServletResponse httpServletResponse) {
     	try {
     		UserResponse.LoginResponse result=naverLoginService.processNaverLogin(naverLoginRequest.getCode(), naverLoginRequest.getState());
     		HttpHeaders headers = new HttpHeaders();
@@ -52,16 +62,34 @@ public class UserController {
     }
     
     
-    @PostMapping("/test")
-    public ResponseEntity<String> test(HttpServletRequest request) {
+    @PostMapping("/login/refresh")
+    public ResponseEntity<String> refreshToken(HttpServletRequest request) {
     	try {
-    		Cookie[] cookies = request.getCookies();
-            return ResponseEntity.status(HttpStatus.OK).body("통신성공");	
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("refreshToken".equals(cookie.getName())) {
+                    	 Claims claims=jwtUtil.extractAllClaimsByRefreshToken(cookie.getValue());
+                    	 String userId=claims.getSubject();
+                         UserInfo userInfo=userService.selectUserInfo(userId);
+                         if("N".equals(userInfo.getUseYn())) {
+                         	//회원탈퇴한 유저의 토큰일 시
+                        	 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("통신성공");
+                         }
+                         HttpHeaders headers = new HttpHeaders();
+                         String jwtAccessToken = jwtUtil.generateAccessToken(userInfo.getUserId());
+                 	    headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + jwtAccessToken);
+                	    return ResponseEntity.status(HttpStatus.OK).headers(headers).body("통신성공!");
+                    }
+                }
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("통신성공");
     	}catch (Exception e) {
-			// TODO: handle exception
-    		logger.error("네이버 로그인 실패 "+e.toString());
+    		logger.error("리프레시토큰을 이용한 엑세스토큰 발급 실패 "+e.toString());
     		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("통신실패");
 		}
     }
+    
+
 
 }
