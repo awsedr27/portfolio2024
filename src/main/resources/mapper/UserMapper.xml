@@ -16,7 +16,7 @@
 		    create_date ,
 		    modify_date 
 		FROM
-		    USERS
+		    users
 		WHERE
 		    naver_sns_id = #{naverSnsId}
   </select>
@@ -33,10 +33,13 @@
 		    #{nickname},
 		    #{naverSnsId}
 		)
+		<selectKey keyProperty="userId" resultType="String" order="AFTER" >
+			select user_id from users where naver_sns_id=#{naverSnsId}
+		</selectKey>
   </insert>
   <update id="updateUserInfo" parameterType="com.portfolio.user.dto.UserDto$UserInfo">
     UPDATE users
-    <trim prefix="SET" suffixOverrides="," suffix=" WHERE id = #{userId}">
+    <trim prefix="SET" suffixOverrides="," suffix=" WHERE user_id = #{userId}">
         <if test="username != null and !username.isEmpty()">
             username = #{username},
         </if>
@@ -63,7 +66,7 @@
 		    create_date ,
 		    modify_date 
 		FROM
-		    USERS
+		    users
 		WHERE
 		    user_id = #{userId}
   </select>

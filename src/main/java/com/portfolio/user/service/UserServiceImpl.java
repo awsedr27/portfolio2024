@@ -13,7 +13,7 @@ public class UserServiceImpl implements UserService {
 	UserDao userDao;
 
 	@Override
-	public UserInfo selectUserInfo(String userId) {
+	public UserInfo selectUserInfo(String userId)throws Exception {
 		return userDao.selectUserInfo(userId);
 	}
 

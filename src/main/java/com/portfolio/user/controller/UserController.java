@@ -27,6 +27,7 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/user")
@@ -44,7 +45,7 @@ public class UserController {
 	UserService userService;
 	
     @PostMapping("/login/naver")
-    public ResponseEntity<String> loginNaver(@RequestBody NaverLoginRequest naverLoginRequest,HttpServletResponse httpServletResponse) {
+    public ResponseEntity<String> loginNaver(@Valid @RequestBody NaverLoginRequest naverLoginRequest,HttpServletResponse httpServletResponse) {
     	try {
     		UserResponse.LoginResponse result=naverLoginService.processNaverLogin(naverLoginRequest.getCode(), naverLoginRequest.getState());
     		HttpHeaders headers = new HttpHeaders();
@@ -86,7 +87,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("통신성공");
     	}catch (Exception e) {
     		logger.error("리프레시토큰을 이용한 엑세스토큰 발급 실패 "+e.toString());
-    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("통신실패");
+    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("통신실패");
 		}
     }
     

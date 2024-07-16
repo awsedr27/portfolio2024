@@ -1,5 +1,6 @@
 package com.portfolio.user.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.portfolio.exception.CustomException;
 import com.portfolio.user.dao.UserDao;
 import com.portfolio.user.dto.UserResponse;
 import com.portfolio.user.dto.UserDto.NaverUserProfile;
@@ -59,28 +61,30 @@ public class NaverLoginServiceImpl implements NaverLoginService {
 	}
 
 	@Override
-	public UserResponse.LoginResponse processNaverLogin(String code, String state) throws Exception {
+	public UserResponse.LoginResponse processNaverLogin(String code, String state) throws Exception  {
         String accessToken = getAccessToken(code, state);
         NaverUserProfile naverUserProfile = getUserProfile(accessToken);
+        if(naverUserProfile==null||naverUserProfile.getResponse()==null||StringUtils.isBlank(naverUserProfile.getResponse().getId())) {
+        	 throw new CustomException("네이버 프로필이 없습니다");
+        }
         UserInfo userInfo=userDao.selectUserInfoByNaverSnsId(naverUserProfile.getResponse().getId());
-        
+        UserInfo userInfoRq=new UserInfo(naverUserProfile.getResponse());
         if (userInfo == null) {
         	//회원가입 
-        	UserInfo userInfoRq=new UserInfo(naverUserProfile.getResponse());
         	userDao.insertUserInfo(userInfoRq);
         	
         }else {
+        	userInfoRq.setUserId(userInfo.getUserId());
         	if("N".equals(userInfo.getUseYn())) {
         		//활성화로 업데이트 
-            	UserInfo userInfoRq=new UserInfo(naverUserProfile.getResponse());
+            	//UserInfo userInfoRq=new UserInfo(naverUserProfile.getResponse());
             	userInfoRq.setUseYn("Y");
-            	userInfoRq.setUserId(userInfo.getUserId());
         		userDao.updateUserInfo(userInfoRq);
         	}
         }
         
-        String jwtAccessToken = jwtUtil.generateAccessToken(userInfo.getUserId());
-        String jwtRefreshToken = jwtUtil.generateRefreshToken(userInfo.getUserId());
+        String jwtAccessToken = jwtUtil.generateAccessToken(userInfoRq.getUserId());
+        String jwtRefreshToken = jwtUtil.generateRefreshToken(userInfoRq.getUserId());
         UserResponse.LoginResponse loginResponse=new UserResponse.LoginResponse(jwtAccessToken,jwtRefreshToken);
         
         return loginResponse;
