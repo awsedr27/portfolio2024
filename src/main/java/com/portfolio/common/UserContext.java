@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
-import com.portfolio.user.dto.UserDto.UserInfo;
+import com.portfolio.user.dto.UserDto.User;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -14,13 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 @Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Slf4j
 public class UserContext {
-    private UserInfo userInfo;
+    private User userInfo;
 
-    public UserInfo getUserInfo() {
+    public User getUserInfo() {
         return userInfo;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
+    public void setUserInfo(User userInfo) {
         this.userInfo = userInfo;
     }
 

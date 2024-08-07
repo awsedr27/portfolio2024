@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.portfolio.user.dto.UserDto.NaverUserProfile;
-import com.portfolio.user.dto.UserDto.UserInfo;
+import com.portfolio.user.dto.UserDto.User;
 import com.portfolio.user.dto.UserRequest.NaverLoginRequest;
 import com.portfolio.user.dto.UserResponse;
 import com.portfolio.user.dto.UserResponse.LoginResponse;
@@ -72,7 +72,7 @@ public class UserController {
                     if ("refreshToken".equals(cookie.getName())) {
                     	 Claims claims=jwtUtil.extractAllClaimsByRefreshToken(cookie.getValue());
                     	 String userId=claims.getSubject();
-                         UserInfo userInfo=userService.selectUserInfo(userId);
+                         User userInfo=userService.selectUser(userId);
                          if("N".equals(userInfo.getUseYn())) {
                          	//회원탈퇴한 유저의 토큰일 시
                         	 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("통신성공");

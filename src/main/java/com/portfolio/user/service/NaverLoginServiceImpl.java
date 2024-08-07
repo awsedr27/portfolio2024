@@ -16,7 +16,7 @@ import com.portfolio.exception.CustomException;
 import com.portfolio.user.dao.UserDao;
 import com.portfolio.user.dto.UserResponse;
 import com.portfolio.user.dto.UserDto.NaverUserProfile;
-import com.portfolio.user.dto.UserDto.UserInfo;
+import com.portfolio.user.dto.UserDto.User;
 import com.portfolio.user.dto.UserResponse.NaverTokenResponse;
 import com.portfolio.utils.JwtUtil;
 
@@ -67,11 +67,11 @@ public class NaverLoginServiceImpl implements NaverLoginService {
         if(naverUserProfile==null||naverUserProfile.getResponse()==null||StringUtils.isBlank(naverUserProfile.getResponse().getId())) {
         	 throw new CustomException("네이버 프로필이 없습니다");
         }
-        UserInfo userInfo=userDao.selectUserInfoByNaverSnsId(naverUserProfile.getResponse().getId());
-        UserInfo userInfoRq=new UserInfo(naverUserProfile.getResponse());
+        User userInfo=userDao.selectUserInfoByNaverSnsId(naverUserProfile.getResponse().getId());
+        User userInfoRq=new User(naverUserProfile.getResponse());
         if (userInfo == null) {
         	//회원가입 
-        	userDao.insertUserInfo(userInfoRq);
+        	userDao.insertUser(userInfoRq);
         	
         }else {
         	userInfoRq.setUserId(userInfo.getUserId());
@@ -79,7 +79,7 @@ public class NaverLoginServiceImpl implements NaverLoginService {
         		//활성화로 업데이트 
             	//UserInfo userInfoRq=new UserInfo(naverUserProfile.getResponse());
             	userInfoRq.setUseYn("Y");
-        		userDao.updateUserInfo(userInfoRq);
+        		userDao.updateUser(userInfoRq);
         	}
         }
         

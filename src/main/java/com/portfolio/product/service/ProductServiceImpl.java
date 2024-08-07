@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.portfolio.product.dao.ProductDao;
-import com.portfolio.product.dto.ProductDto.ProductInfo;
-import com.portfolio.product.dto.ProductResponse.ProductItemResponse;
+import com.portfolio.product.dto.ProductDto.ProductDetailResult;
+import com.portfolio.product.dto.ProductDto.ProductListQuery;
+import com.portfolio.product.dto.ProductDto.ProductListResult;
+import com.portfolio.product.dto.ProductServiceDto.ProductListServiceDto;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -20,9 +22,16 @@ public class ProductServiceImpl implements ProductService {
     private int pagingSize;
 
 	@Override
-	public List<ProductItemResponse> getProductList(ProductInfo rq)throws Exception {
+	public List<ProductListResult> getProductList(ProductListServiceDto rq)throws Exception {
 		rq.setLimit(pagingSize);
-		return productDao.selectProductList(rq);
+		
+		ProductListQuery ProductListQuery=new ProductListQuery(rq);
+		return productDao.selectProductList(ProductListQuery);
+	}
+
+	@Override
+	public ProductDetailResult getProductInfo(Integer ProductId) throws Exception {
+		return productDao.selectProductDetail(ProductId);
 	}
 
 

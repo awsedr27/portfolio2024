@@ -2,11 +2,14 @@ package com.portfolio.product.service;
 
 import java.util.List;
 
-import com.portfolio.product.dto.ProductDto.ProductInfo;
-import com.portfolio.product.dto.ProductResponse.ProductItemResponse;
+import com.portfolio.product.dto.ProductDto.ProductDetailResult;
+import com.portfolio.product.dto.ProductDto.ProductListResult;
+import com.portfolio.product.dto.ProductServiceDto.ProductListServiceDto;
 
 public interface ProductService {
 
-	List<ProductItemResponse> getProductList(ProductInfo rq) throws Exception;
+	List<ProductListResult> getProductList(ProductListServiceDto rq) throws Exception;
+	
+	ProductDetailResult getProductInfo(Integer ProductId) throws Exception;
 
 }

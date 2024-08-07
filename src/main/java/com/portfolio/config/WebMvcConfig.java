@@ -22,7 +22,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/api/**")
                 .excludePathPatterns(
                 		"/api/user/login/**",
-                		"/api/product/list");
+                		"/api/product/list",
+                		"/api/product/detail");
         		
         log.info("인터셉터 설정 완료");
     }

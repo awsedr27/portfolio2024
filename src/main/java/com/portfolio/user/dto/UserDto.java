@@ -32,7 +32,7 @@ public class UserDto {
     
     @Getter
     @Setter
-    public static class UserInfo {
+    public static class User {
         private String userId;
         private String username;
         private String email;
@@ -42,16 +42,15 @@ public class UserDto {
         private Timestamp  createDate;
         private Timestamp  modifyDate;
         
-        public UserInfo() {
+        public User() {
         	
         }
         // Response 객체를 이용한 생성자
-        public UserInfo(Response response) {
+        public User(Response response) {
             this.username = response.getName();
             this.email = response.getEmail();
             this.nickname = response.getNickname();
             this.naverSnsId = response.getId(); 
         }
-
     }
 }

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.portfolio.user.dao.UserDao;
-import com.portfolio.user.dto.UserDto.UserInfo;
+import com.portfolio.user.dto.UserDto.User;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -13,8 +13,8 @@ public class UserServiceImpl implements UserService {
 	UserDao userDao;
 
 	@Override
-	public UserInfo selectUserInfo(String userId)throws Exception {
-		return userDao.selectUserInfo(userId);
+	public User selectUser(String userId)throws Exception {
+		return userDao.selectUser(userId);
 	}
 
 	

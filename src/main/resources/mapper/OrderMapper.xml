@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.portfolio.order.dao.OrderDao">
+
+    <resultMap id="orderResultMap" type="com.portfolio.order.dto.OrderDto$OrderListResult">
+        <id property="orderId" column="order_id"/>
+        <result property="totalPrice" column="total_price"/>
+        <result property="status" column="status"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifyDate" column="modify_date"/>
+        <collection property="orderItems" ofType="com.portfolio.order.dto.OrderDto$OrderItemDTO">
+            <id property="orderItemId" column="order_item_id"/>
+            <result property="orderId" column="order_id"/>
+            <result property="productId" column="product_id"/>
+            <result property="quantity" column="quantity"/>
+            <result property="price" column="price"/>
+            <result property="createDate" column="oi_create_date"/>
+            <result property="modifyDate" column="oi_modify_date"/>
+        </collection>
+    </resultMap>
+    <select id="selectOrderList" parameterType="com.portfolio.order.dto.OrderDto$OrderListQuery" resultMap="orderResultMap">
+        SELECT
+            o.order_id,
+            o.total_price,
+            o.status,
+            o.create_date,
+            o.modify_date,
+            oi.order_item_id,
+            oi.product_id,
+            oi.quantity,
+            oi.price,
+            oi.create_date AS oi_create_date,
+            oi.modify_date AS oi_modify_date
+        FROM orders o
+        LEFT JOIN orderItems oi ON o.order_id = oi.order_id
+        WHERE o.user_id=#{userId}
+        <if test="status != null and status != ''">
+            AND o.status = #{status}
+        </if>
+        <if test="createDate != null">
+            AND o.create_date <![CDATA[<]]> #{createDate}
+        </if>
+        ORDER BY o.create_date DESC
+        LIMIT #{limit}
+    </select>
+    <select id="selectOrder" parameterType="Int" resultType="com.portfolio.order.dto.OrderDto">
+        SELECT
+			order_id,
+			user_id,
+			total_price,
+			status,
+			create_date,
+			modify_date
+        FROM orders
+        WHERE order_id=#{orderId}
+    </select>
+    <update id="updateOrderForCancel" parameterType="com.portfolio.order.dto.OrderDto$OrderCancelQuery">
+	    UPDATE orders
+		SET
+		status='CANCELLED'
+		WHERE
+	    order_id = #{orderId};
+    </update>
+    
+</mapper>

@@ -5,7 +5,7 @@
   
 <mapper namespace="com.portfolio.product.dao.ProductDao">
 
-    <select id="selectProductList" parameterType="com.portfolio.product.dto.ProductDto$ProductInfo" resultType="com.portfolio.product.dto.ProductResponse$ProductItemResponse">
+    <select id="selectProductList" parameterType="com.portfolio.product.dto.ProductDto$ProductListQuery" resultType="com.portfolio.product.dto.ProductDto$ProductListResult">
         SELECT 
             product_id,
             name,
@@ -16,16 +16,44 @@
         FROM 
             product
         <where>
-            <if test="createDate != null">
-                AND create_date <![CDATA[<]]> #{createDate}
+        	AND use_yn = 'Y'
+            <if test="productId != null">
+                AND product_id <![CDATA[<]]> #{productId}
             </if>
             <if test="categoryId != null">
                 AND category_id = #{categoryId}
             </if>
         </where>
-        ORDER BY create_date DESC
+        ORDER BY create_date DESC, product_id DESC
         LIMIT #{limit}
     </select>
-  
+    
+    <select id="selectProduct" parameterType="Integer" resultType="com.portfolio.product.dto.ProductDto$Product">
+        SELECT 
+			product_id,
+			name,
+			description,
+			use_yn,
+			price,
+			category_id,
+			create_date,
+			modify_date
+        FROM 
+            product
+        WHERE product_id=#{productId}
+    </select>
+    <select id="selectProductDetail" parameterType="Integer" resultType="com.portfolio.product.dto.ProductDto$ProductDetailResult">
+        SELECT 
+			product_id,
+			name,
+			description,
+			price,
+			category_id,
+			create_date
+        FROM 
+            product
+        WHERE product_id=#{productId}
+        AND use_yn = 'Y'
+    </select>
   
 </mapper>

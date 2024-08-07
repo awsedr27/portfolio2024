@@ -1,7 +1,7 @@
 package com.portfolio.user.service;
 
-import com.portfolio.user.dto.UserDto.UserInfo;
+import com.portfolio.user.dto.UserDto.User;
 
 public interface UserService {
-	UserInfo selectUserInfo(String userId) throws Exception;
+	User selectUser(String userId) throws Exception;
 }

@@ -5,7 +5,7 @@
   
 <mapper namespace="com.portfolio.user.dao.UserDao">
 
-  <select id="selectUserInfoByNaverSnsId" parameterType="String" resultType="com.portfolio.user.dto.UserDto$UserInfo">
+  <select id="selectUserInfoByNaverSnsId" parameterType="String" resultType="com.portfolio.user.dto.UserDto$User">
 		SELECT
 		    user_id,
 		    username,
@@ -21,7 +21,7 @@
 		    naver_sns_id = #{naverSnsId}
   </select>
   
-  <insert id="insertUserInfo" parameterType="com.portfolio.user.dto.UserDto$UserInfo">
+  <insert id="insertUserInfo" parameterType="com.portfolio.user.dto.UserDto$User">
 		INSERT INTO users (
 		    username,
 		    email,
@@ -37,7 +37,7 @@
 			select user_id from users where naver_sns_id=#{naverSnsId}
 		</selectKey>
   </insert>
-  <update id="updateUserInfo" parameterType="com.portfolio.user.dto.UserDto$UserInfo">
+  <update id="updateUserInfo" parameterType="com.portfolio.user.dto.UserDto$User">
     UPDATE users
     <trim prefix="SET" suffixOverrides="," suffix=" WHERE user_id = #{userId}">
         <if test="username != null and !username.isEmpty()">
@@ -55,7 +55,7 @@
     </trim>
     
   </update>
-  <select id="selectUserInfo" parameterType="String" resultType="com.portfolio.user.dto.UserDto$UserInfo">
+  <select id="selectUser" parameterType="String" resultType="com.portfolio.user.dto.UserDto$User">
 		SELECT
 		    user_id,
 		    username,
