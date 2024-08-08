@@ -4,11 +4,43 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.portfolio.order.dao.OrderItemsDao">
-    <update id="updateOrderItemsForCancel" parameterType="com.portfolio.order.dto.OrderDto$OrderItemsCancelQuery">
+    <update id="updateOrderItemsForCancelByOrderId" parameterType="com.portfolio.order.dto.OrderDto$OrderItemsCancelByOrderIdQuery">
 	    UPDATE orderItems
 		SET
 		status='CANCELLED'
 		WHERE
 	    order_id = #{orderId};
     </update>
+    <select id="selectOrderItem" parameterType="Int" resultType="com.portfolio.order.dto.OrderDto$OrderItemDto">
+        SELECT
+			order_item_id,
+			order_id,
+			product_id,
+			quantity,
+			price,
+			status,
+			create_date,
+			modify_date
+        FROM orderItems
+        WHERE order_item_id=#{orderItemId}
+    </select>
+    <update id="updateOrderItemForCancel" parameterType="com.portfolio.order.dto.OrderDto$OrderItemCancelQuery">
+	    UPDATE orderItems
+		SET
+		status='CANCELLED'
+		WHERE
+	    order_item_id = #{orderItemId};
+    </update>
+	<insert id="insertOrderItemsList" parameterType="com.portfolio.order.dto.OrderDto$OrderItemsSaveQuery">
+	    INSERT INTO orderItems (
+	        order_id,
+	        status,
+	        product_id,
+	        quantity,
+	        price
+	    ) VALUES
+	    <foreach collection="orderItems" item="item" separator=",">
+	        (#{orderId}, #{status}, #{item.productId}, #{item.quantity}, #{item.price})
+	    </foreach>
+	</insert>
 </mapper>

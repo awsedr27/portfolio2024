@@ -8,6 +8,7 @@ import com.portfolio.order.dto.OrderDto;
 import com.portfolio.order.dto.OrderDto.OrderCancelQuery;
 import com.portfolio.order.dto.OrderDto.OrderListQuery;
 import com.portfolio.order.dto.OrderDto.OrderListResult;
+import com.portfolio.order.dto.OrderDto.OrderSaveQuery;
 
 @Mapper
 public interface OrderDao {
@@ -17,5 +18,7 @@ public interface OrderDao {
 	OrderDto selectOrder(Integer orderId);
 
 	void updateOrderForCancel(OrderCancelQuery orderCancelQuery);
+
+	void insertOrder(OrderSaveQuery orderSaveQuery);
 
 }

@@ -16,5 +16,6 @@ public interface ProductDao {
 	List<ProductListResult> selectProductList(ProductListQuery rq);
 	ProductDetailResult selectProductDetail(Integer productId);
 	Product selectProduct(Integer productId);
+	Product selectProductWithExclusiveLock(Integer productId);
 
 }

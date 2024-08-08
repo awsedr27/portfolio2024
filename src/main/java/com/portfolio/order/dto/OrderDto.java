@@ -1,9 +1,11 @@
 package com.portfolio.order.dto;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.portfolio.order.dto.OrderServiceDto.OrderCancelServiceDto;
+import com.portfolio.order.dto.OrderServiceDto.OrderItemCancelServiceDto;
 import com.portfolio.order.dto.OrderServiceDto.OrderListServiceDto;
 
 import lombok.Getter;
@@ -21,12 +23,13 @@ public class OrderDto {
     
     @Getter
     @Setter
-    public static class OrderItemDTO {
+    public static class OrderItemDto {
         private Integer orderItemId;
         private Integer orderId;
         private Integer productId;
         private Integer quantity;
         private Integer price;
+        private String status;
         private Timestamp createDate;
         private Timestamp modifyDate;
     }
@@ -53,7 +56,7 @@ public class OrderDto {
         private String status;
         private Timestamp createDate;
         private Timestamp modifyDate;
-        private List<OrderItemDTO> orderItems;
+        private List<OrderItemDto> orderItems;
 	}
     @Getter
     @Setter
@@ -69,14 +72,57 @@ public class OrderDto {
 	}
     @Getter
     @Setter
-	public static class OrderItemsCancelQuery {
-        public OrderItemsCancelQuery() {
+	public static class OrderItemsCancelByOrderIdQuery {
+        public OrderItemsCancelByOrderIdQuery() {
 
 		}
-        public OrderItemsCancelQuery(Integer orderId) {
+        public OrderItemsCancelByOrderIdQuery(Integer orderId) {
         	this.orderId=orderId;
 		}
 
 		private Integer orderId;
 	}
+    @Getter
+    @Setter
+	public static class OrderItemCancelQuery {
+        public OrderItemCancelQuery() {
+
+		}
+        public OrderItemCancelQuery(Integer orderItemId) {
+        	this.orderItemId=orderItemId;
+		}
+
+		private Integer orderItemId;
+	}
+    @Getter
+    @Setter
+	public static class OrderSaveQuery {
+    	private Integer orderId;
+    	private String userId;
+    	private Integer totalPrice;
+    	private String status;
+	}
+    @Getter
+    @Setter
+	public static class OrderItemsSaveQuery {
+    	private Integer orderId;
+    	private List<OrderItemSaveQuery> orderItems;
+    	private String status;
+	}
+    @Getter
+    @Setter
+	public static class OrderItemSaveQuery {
+    	private Integer productId;
+    	private Integer quantity;
+    	private Integer price;
+    	public OrderItemSaveQuery() {
+    		
+    	}
+    	public OrderItemSaveQuery(Integer productId,Integer quantity,Integer price) {
+    		this.productId=productId;
+    		this.quantity=quantity;
+    		this.price=price;
+    	}
+	}
+
 }

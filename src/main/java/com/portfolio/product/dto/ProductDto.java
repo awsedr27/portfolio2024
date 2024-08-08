@@ -13,6 +13,7 @@ public class ProductDto {
     @Setter
 	public static class Product {
 	    private Integer productId;
+	    private Integer quantity;
 	    private String name;
 	    private String description;
 	    private String useYn;

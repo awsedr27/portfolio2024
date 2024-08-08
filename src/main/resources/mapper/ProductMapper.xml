@@ -31,6 +31,7 @@
     <select id="selectProduct" parameterType="Integer" resultType="com.portfolio.product.dto.ProductDto$Product">
         SELECT 
 			product_id,
+			quantity,
 			name,
 			description,
 			use_yn,
@@ -55,5 +56,20 @@
         WHERE product_id=#{productId}
         AND use_yn = 'Y'
     </select>
-  
+    <select id="selectProductWithExclusiveLock" parameterType="Integer" resultType="com.portfolio.product.dto.ProductDto$Product">
+        SELECT 
+			product_id,
+			quantity,
+			name,
+			description,
+			use_yn,
+			price,
+			category_id,
+			create_date,
+			modify_date
+        FROM 
+            product
+        WHERE product_id=#{productId}
+        FOR UPDATE;
+    </select>
 </mapper>
