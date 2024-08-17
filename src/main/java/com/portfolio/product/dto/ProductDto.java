@@ -30,6 +30,7 @@ public class ProductDto {
 	    private String description;
 	    private Integer price;
 	    private Integer categoryId;
+	    private String imageUrl;
 	    private Timestamp createDate;
 	}
     @Getter
@@ -57,6 +58,7 @@ public class ProductDto {
 	    private String description;
 	    private Integer price;
 	    private Integer categoryId;
+	    private String imageUrl;
 	    private Timestamp createDate;
 	}
     

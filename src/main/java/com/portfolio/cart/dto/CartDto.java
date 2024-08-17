@@ -55,7 +55,10 @@ public class CartDto {
 	public static class CartListResult {
 	    private Integer productId;
 	    private String productName;
+	    private String description;
+	    private String productUseYn;
 	    private Integer quantity;
+	    private Integer price;
 	    private Timestamp createDate;
 	}
     @Getter

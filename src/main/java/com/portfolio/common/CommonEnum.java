@@ -17,5 +17,9 @@ public class CommonEnum {
         PROCESSING, // 주문이 처리 중임
         CANCELLED   // 주문이 취소됨
     }
+    
+    public enum FileReferenceType {
+    	PRODUCT_IMG
+    }
 }
 

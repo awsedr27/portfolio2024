@@ -39,7 +39,10 @@
         SELECT 
 			c.product_id,
 			p.name as productName,
+			p.description as description,
+			p.use_yn as productUseYn,
 			c.quantity,
+			p.price,
 			c.create_date
         FROM cart c
         LEFT OUTER JOIN product p ON c.product_id=p.product_id

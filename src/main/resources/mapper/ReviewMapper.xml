@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.portfolio.review.dao.ReviewDao">
+    <select id="selectReviewList" parameterType="com.portfolio.review.dto.ReviewDto$ReviewListQuery" resultType="com.portfolio.review.dto.ReviewDto$ReviewListResult">
+        SELECT 
+			review_id,
+			product_id,
+			rating,
+			comment,
+			reply,
+			create_date,
+			modify_date
+        FROM 
+            review
+        WHERE use_yn = 'Y'
+        AND product_id=#{productId}
+            <if test="reviewId != null">
+                AND review_id <![CDATA[<]]> #{reviewId}
+            </if>
+	    <choose>
+	        <when test="sortBy == 'RECENT'">
+	           ORDER BY create_date DESC, review_id DESC
+	        </when>
+	        <when test="sortBy == 'RATING_DESC'">
+	           ORDER BY rating DESC, create_date DESC
+	        </when>
+	        <when test="sortBy == 'RATING_ASC'">
+	           ORDER BY rating ASC, create_date DESC
+	        </when>
+	        <otherwise>
+	           ORDER BY create_date DESC, review_id DESC
+	        </otherwise>
+	    </choose>
+        LIMIT #{limit}
+    </select>
+	<insert id="insertReview" parameterType="com.portfolio.review.dto.ReviewDto$ReviewSaveQuery">
+			INSERT INTO review (
+				product_id,
+				user_id,
+				rating,
+				comment
+			) VALUES (
+			    #{productId},
+			    #{userId},
+			    #{rating},
+			    #{comment}
+			)
+	  </insert>
+</mapper>

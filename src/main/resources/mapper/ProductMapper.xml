@@ -7,24 +7,26 @@
 
     <select id="selectProductList" parameterType="com.portfolio.product.dto.ProductDto$ProductListQuery" resultType="com.portfolio.product.dto.ProductDto$ProductListResult">
         SELECT 
-            product_id,
-            name,
-            description,
-            price,
-            category_id,
-            create_date
+            p.product_id,
+            p.name,
+            p.description,
+            p.price,
+            p.category_id,
+            CONCAT(f.file_id, '.', f.file_type) AS imageUrl,
+            p.create_date
         FROM 
-            product
+            product p
+        LEFT OUTER JOIN file f ON p.product_id=f.reference_id AND f.reference_type='PRODUCT_IMG' AND f.use_yn='Y'
         <where>
-        	AND use_yn = 'Y'
+        	AND p.use_yn = 'Y'
             <if test="productId != null">
-                AND product_id <![CDATA[<]]> #{productId}
+                AND p.product_id <![CDATA[<]]> #{productId}
             </if>
             <if test="categoryId != null">
-                AND category_id = #{categoryId}
+                AND p.category_id = #{categoryId}
             </if>
         </where>
-        ORDER BY create_date DESC, product_id DESC
+        ORDER BY p.create_date DESC, p.product_id DESC
         LIMIT #{limit}
     </select>
     
@@ -45,16 +47,18 @@
     </select>
     <select id="selectProductDetail" parameterType="Integer" resultType="com.portfolio.product.dto.ProductDto$ProductDetailResult">
         SELECT 
-			product_id,
-			name,
-			description,
-			price,
-			category_id,
-			create_date
+			p.product_id,
+			p.name,
+			p.description,
+			p.price,
+			p.category_id,
+			CONCAT(f.file_id, '.', f.file_type) AS imageUrl,
+			p.create_date
         FROM 
-            product
-        WHERE product_id=#{productId}
-        AND use_yn = 'Y'
+            product p
+        LEFT OUTER JOIN file f ON p.product_id=f.reference_id AND f.reference_type='PRODUCT_IMG' AND f.use_yn='Y'
+        WHERE p.product_id=#{productId}
+        AND p.use_yn = 'Y'
     </select>
     <select id="selectProductWithExclusiveLock" parameterType="Integer" resultType="com.portfolio.product.dto.ProductDto$Product">
         SELECT 
