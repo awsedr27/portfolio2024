@@ -9,6 +9,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.portfolio.common.UserContext;
+import com.portfolio.exception.CustomException;
 import com.portfolio.user.dto.UserDto.User;
 import com.portfolio.user.service.UserService;
 import com.portfolio.utils.JwtUtil;
@@ -36,7 +37,6 @@ public class Intercepter implements HandlerInterceptor {
     	if(CorsUtils.isPreFlightRequest(request)) {
     		return true;
     	}
-    	
     	String token = extractJwtToken(request);
         
         if (token != null) {
@@ -45,7 +45,7 @@ public class Intercepter implements HandlerInterceptor {
                 Claims claims = jwtUtil.extractAllClaimsByAccessToken(token);
                 String userId=claims.getSubject();
                 User userInfo=userService.selectUser(userId);
-                if("N".equals(userInfo.getUseYn())) {
+                if(userInfo==null||"N".equals(userInfo.getUseYn())) {
                 	//회원탈퇴한 유저의 토큰일 시
                 	response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 	return false;

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.portfolio.exception.CustomException;
 import com.portfolio.user.dto.UserDto.NaverUserProfile;
 import com.portfolio.user.dto.UserDto.User;
 import com.portfolio.user.dto.UserRequest.NaverLoginRequest;
@@ -51,12 +52,8 @@ public class UserController {
     		HttpHeaders headers = new HttpHeaders();
     	    headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + result.getAccessToken());
             headers.add(HttpHeaders.SET_COOKIE, "refreshToken=" + result.getRefreshToken() + "; Path=/; HttpOnly; Max-Age=2592000;");
-
-            
-    	    
     	    return ResponseEntity.status(HttpStatus.OK).headers(headers).body("로그인 완료");	
     	}catch (Exception e) {
-			// TODO: handle exception
     		logger.error("네이버 로그인 실패 "+e.toString());
     		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("로그인 실패");
 		}
@@ -73,9 +70,9 @@ public class UserController {
                     	 Claims claims=jwtUtil.extractAllClaimsByRefreshToken(cookie.getValue());
                     	 String userId=claims.getSubject();
                          User userInfo=userService.selectUser(userId);
-                         if("N".equals(userInfo.getUseYn())) {
+                         if(userInfo==null||"N".equals(userInfo.getUseYn())) {
                          	//회원탈퇴한 유저의 토큰일 시
-                        	 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("통신성공");
+                        	throw new CustomException("회원탈퇴한 유저입니다");
                          }
                          HttpHeaders headers = new HttpHeaders();
                          String jwtAccessToken = jwtUtil.generateAccessToken(userInfo.getUserId());
@@ -84,10 +81,12 @@ public class UserController {
                     }
                 }
             }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("통신성공");
+            throw new CustomException("리프레시 토큰 읽기 실패");
     	}catch (Exception e) {
     		logger.error("리프레시토큰을 이용한 엑세스토큰 발급 실패 "+e.toString());
-    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("통신실패");
+    		HttpHeaders headers = new HttpHeaders();
+    		headers.add(HttpHeaders.SET_COOKIE, "refreshToken=; Path=/; HttpOnly; Max-Age=0;");
+    		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).headers(headers).body("통신실패");
 		}
     }
     
