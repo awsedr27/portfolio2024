@@ -25,7 +25,7 @@ public class ProductResponse {
 	    private String name;
 	    private String description;
 	    private Integer price;
-	    private Integer categoryId;
+	    private String categoryName;
 	    private String imageUrl;
 	    private Timestamp createDate;
 	    
@@ -38,13 +38,12 @@ public class ProductResponse {
 				this.name = productDetail.getName();
 				this.description = productDetail.getDescription();
 				this.price = productDetail.getPrice();
-				this.categoryId = productDetail.getCategoryId();
+				this.categoryName = productDetail.getCategoryName();
 				this.imageUrl=productDetail.getImageUrl();
 				this.createDate = productDetail.getCreateDate();
 	    	}
 	    }
 
 	}
-
 
 }

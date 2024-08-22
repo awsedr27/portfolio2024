@@ -16,6 +16,8 @@ public class CartRequest {
     	@NotNull(message = "productId cannot be null")
         @Min(value = 0, message = "productId must be greater than or equal to 0")
     	private Integer productId;
+    	@Min(value = 1, message = "quantity must be greater than or equal to 1")
+    	private Integer quantity;;
 	}
     @Getter
     @Setter
@@ -24,12 +26,31 @@ public class CartRequest {
         @Min(value = 0, message = "productId must be greater than or equal to 0")
     	private Integer productId;
     	
-    	@Min(value = 0, message = "quantity must be greater than or equal to 0")
+    	@NotNull(message = "quantity cannot be null")
+    	@Min(value = 1, message = "quantity must be greater than or equal to 1")
     	private Integer quantity;
 	}
     @Getter
     @Setter
 	public static class CartListDeleteRequest {
+        @NotEmpty(message = "productIdList cannot be empty")
+        private List<@NotNull(message = "productId cannot be null")
+                     @Min(value = 0, message = "productId must be greater than or equal to 0") Integer> productIdList;
+	}
+    @Getter
+    @Setter
+	public static class CartBuyNowRequest {
+    	@NotNull(message = "productId cannot be null")
+        @Min(value = 0, message = "productId must be greater than or equal to 0")
+    	private Integer productId;
+    	
+    	@NotNull(message = "quantity cannot be null")
+    	@Min(value = 1, message = "quantity must be greater than or equal to 1")
+    	private Integer quantity;
+	}
+    @Getter
+    @Setter
+	public static class CartListForCheckoutRequest {
         @NotEmpty(message = "productIdList cannot be empty")
         private List<@NotNull(message = "productId cannot be null")
                      @Min(value = 0, message = "productId must be greater than or equal to 0") Integer> productIdList;

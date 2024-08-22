@@ -51,12 +51,13 @@
 			p.name,
 			p.description,
 			p.price,
-			p.category_id,
+			c.name as categoryName,
 			CONCAT(f.file_id, '.', f.file_type) AS imageUrl,
 			p.create_date
         FROM 
             product p
         LEFT OUTER JOIN file f ON p.product_id=f.reference_id AND f.reference_type='PRODUCT_IMG' AND f.use_yn='Y'
+        INNER JOIN category c ON p.category_id =c.category_id
         WHERE p.product_id=#{productId}
         AND p.use_yn = 'Y'
     </select>
@@ -76,4 +77,5 @@
         WHERE product_id=#{productId}
         FOR UPDATE;
     </select>
+
 </mapper>

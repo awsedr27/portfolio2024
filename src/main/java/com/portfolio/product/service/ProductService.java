@@ -12,4 +12,5 @@ public interface ProductService {
 	
 	ProductDetailResult getProductInfo(Integer ProductId) throws Exception;
 
+
 }

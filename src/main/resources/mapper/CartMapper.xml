@@ -8,13 +8,15 @@
 	  <insert id="insertCart" parameterType="com.portfolio.cart.dto.CartDto$CartSaveQuery">
 			INSERT INTO cart (
 				user_id,
-				product_id
+				product_id,
+				quantity
 			) VALUES (
 			    #{userId},
-			    #{productId}
+			    #{productId},
+			    IFNULL(#{quantity}, 1)
 			)ON DUPLICATE KEY 
 			UPDATE
-			quantity = quantity + 1;
+			quantity = quantity + IFNULL(#{quantity}, 1);
 	  </insert>
       <select id="selectCart" parameterType="com.portfolio.cart.dto.CartDto$CartQuery" resultType="com.portfolio.cart.dto.CartDto$Cart">
         SELECT 
@@ -43,9 +45,11 @@
 			p.use_yn as productUseYn,
 			c.quantity,
 			p.price,
+			CONCAT(f.file_id, '.', f.file_type) AS imageUrl,
 			c.create_date
         FROM cart c
         LEFT OUTER JOIN product p ON c.product_id=p.product_id
+        LEFT OUTER JOIN file f ON c.product_id=f.reference_id AND f.reference_type='PRODUCT_IMG' AND f.use_yn='Y'
         WHERE user_id=#{userId}
     </select>
     <update id="updateCart" parameterType="com.portfolio.cart.dto.CartDto$CartUpdateQuery">
@@ -63,5 +67,23 @@
 	        #{productId}
 	    </foreach>
 	</delete>
-    
+    <select id="selectCartListForCheckout" parameterType="com.portfolio.cart.dto.CartDto$CartListForCheckoutQuery" resultType="com.portfolio.cart.dto.CartDto$CartListForCheckoutResult">
+        SELECT 
+			c.product_id,
+			p.name as productName,
+			p.description as description,
+			p.use_yn as productUseYn,
+			c.quantity,
+			p.price,
+			CONCAT(f.file_id, '.', f.file_type) AS imageUrl,
+			c.create_date
+        FROM cart c
+        LEFT OUTER JOIN product p ON c.product_id=p.product_id
+	    LEFT OUTER JOIN file f ON c.product_id=f.reference_id AND f.reference_type='PRODUCT_IMG' AND f.use_yn='Y'
+        WHERE user_id=#{userId}
+        AND c.product_id IN
+	      <foreach item="id" collection="productIdList" open="(" separator="," close=")">
+	        #{id}
+	      </foreach>
+    </select>
 </mapper>

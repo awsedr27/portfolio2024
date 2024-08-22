@@ -34,12 +34,14 @@ public class CartDto {
 	public static class CartSaveQuery {
 	    private Integer productId;
 	    private String userId;
+	    private Integer quantity;
 	    
 	    public CartSaveQuery(){
 	    	
 	    }
 	    public CartSaveQuery(CartSaveServiceDto cartSaveServiceDto){
 	    	this.productId=cartSaveServiceDto.getProductId();
+	    	this.quantity=cartSaveServiceDto.getQuantity();
 	    }
 	}
 
@@ -59,6 +61,7 @@ public class CartDto {
 	    private String productUseYn;
 	    private Integer quantity;
 	    private Integer price;
+	    private String imageUrl;
 	    private Timestamp createDate;
 	}
     @Getter
@@ -87,6 +90,22 @@ public class CartDto {
 	    private List<Integer> productIdList;
 	    private String userId;
 	}
-    
-
+    @Getter
+    @Setter
+	public static class CartListForCheckoutQuery{
+    	 private List<Integer> productIdList;
+    	 private String userId;
+	}  
+    @Getter
+    @Setter
+	public static class CartListForCheckoutResult {
+	    private Integer productId;
+	    private String productName;
+	    private String description;
+	    private String productUseYn;
+	    private Integer quantity;
+	    private Integer price;
+	    private String imageUrl;
+	    private Timestamp createDate;
+	}
 }

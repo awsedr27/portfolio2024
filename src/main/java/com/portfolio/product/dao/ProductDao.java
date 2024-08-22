@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.portfolio.product.dto.ProductDto;
 import com.portfolio.product.dto.ProductDto.Product;
 import com.portfolio.product.dto.ProductDto.ProductDetailResult;
 import com.portfolio.product.dto.ProductDto.ProductListQuery;

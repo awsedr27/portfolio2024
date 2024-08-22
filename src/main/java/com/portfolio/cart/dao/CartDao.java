@@ -5,6 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.portfolio.cart.dto.CartDto.Cart;
+import com.portfolio.cart.dto.CartDto.CartListForCheckoutQuery;
+import com.portfolio.cart.dto.CartDto.CartListForCheckoutResult;
 import com.portfolio.cart.dto.CartDto.CartListDeleteQuery;
 import com.portfolio.cart.dto.CartDto.CartListQuery;
 import com.portfolio.cart.dto.CartDto.CartListResult;
@@ -26,5 +28,7 @@ public interface CartDao {
 	int updateCart(CartUpdateQuery cartUpdateQuery);
 
 	int deleteCartList(CartListDeleteQuery cartListDeleteQuery);
+
+	List<CartListForCheckoutResult> selectCartListForCheckout(CartListForCheckoutQuery cartDetailsForCheckoutQuery);
 
 }

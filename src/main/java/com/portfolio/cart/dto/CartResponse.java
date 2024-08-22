@@ -3,6 +3,7 @@ package com.portfolio.cart.dto;
 import java.util.List;
 
 import com.portfolio.cart.dto.CartDto.Cart;
+import com.portfolio.cart.dto.CartDto.CartListForCheckoutResult;
 import com.portfolio.cart.dto.CartDto.CartListResult;
 
 import lombok.Getter;
@@ -32,5 +33,10 @@ public class CartResponse {
 		}
 
 		private Integer quantity;
+	}
+	@Setter
+	@Getter
+	public static class CartListForCheckoutResponse{
+		private List<CartListForCheckoutResult> cartList;
 	}
 }
