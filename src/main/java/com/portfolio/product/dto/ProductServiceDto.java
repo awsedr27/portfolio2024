@@ -9,6 +9,7 @@ public class ProductServiceDto {
 	public static class ProductListServiceDto {
 	    private Integer categoryId;
 	    private Integer productId;
+	    private String productName;
 	    private int limit;
 	    public ProductListServiceDto() {
 	    	
@@ -16,6 +17,7 @@ public class ProductServiceDto {
 	    public ProductListServiceDto(ProductRequest.ProductListRequest request) {
 	    	this.productId=request.getProductId();
 	    	this.categoryId=request.getCategoryId();
+	    	this.productName=request.getProductName();
 	    }
 	    
 	}

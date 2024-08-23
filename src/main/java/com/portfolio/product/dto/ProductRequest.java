@@ -13,8 +13,11 @@ public class ProductRequest {
     @Getter
     @Setter
 	public static class ProductListRequest {
+    	@Min(value = 0, message = "productId must be greater than or equal to 0")
     	private Integer productId;
+    	@Min(value = 0, message = "categoryId must be greater than or equal to 0")
         private Integer categoryId;
+        private String productName;
 	}
     
     @Getter

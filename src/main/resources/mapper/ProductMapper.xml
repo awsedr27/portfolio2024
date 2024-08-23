@@ -25,6 +25,9 @@
             <if test="categoryId != null">
                 AND p.category_id = #{categoryId}
             </if>
+            <if test="productName != null and productName.trim() !=''">
+                AND p.name LIKE CONCAT('%', #{productName}, '%')
+            </if>
         </where>
         ORDER BY p.create_date DESC, p.product_id DESC
         LIMIT #{limit}

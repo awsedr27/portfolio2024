@@ -39,6 +39,7 @@ public class ProductDto {
 	public static class ProductListQuery {
 	    private Integer categoryId;
 	    private Integer productId;
+	    private String productName;
 	    private int limit;
 	    public ProductListQuery() {
 	    	
@@ -46,6 +47,7 @@ public class ProductDto {
 	    public ProductListQuery(ProductListServiceDto request) {
 	    	this.productId=request.getProductId();
 	    	this.categoryId=request.getCategoryId();
+	    	this.productName=request.getProductName();
 	    	this.limit=request.getLimit();
 	    }
 	    
