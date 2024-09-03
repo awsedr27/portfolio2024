@@ -3,6 +3,8 @@ package com.portfolio.user.dto;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+import com.portfolio.user.dto.UserServiceDto.UserUpdateServiceDto;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,7 +43,9 @@ public class UserDto {
         private String naverSnsId;
         private Timestamp  createDate;
         private Timestamp  modifyDate;
-        
+        private String gender;
+        private String birthday;
+        private String birthyear;
         public User() {
         	
         }
@@ -51,6 +55,13 @@ public class UserDto {
             this.email = response.getEmail();
             this.nickname = response.getNickname();
             this.naverSnsId = response.getId(); 
+            this.gender=response.getGender();
+            this.birthday=response.getBirthday();
+            this.birthyear=response.getBirthyear();
         }
+		public User(UserUpdateServiceDto userUpdateServiceDto) {
+			this.email=userUpdateServiceDto.getEmail();
+			this.nickname=userUpdateServiceDto.getNickname();
+		}
     }
 }

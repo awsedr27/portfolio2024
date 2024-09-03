@@ -43,4 +43,39 @@
 	        (#{orderId}, #{status}, #{item.productId}, #{item.quantity}, #{item.price})
 	    </foreach>
 	</insert>
+    <select id="selectMyPageReviewList" parameterType="com.portfolio.order.dto.OrderDto$MyPageReviewListQuery" resultType="com.portfolio.order.dto.OrderDto$MyPageReviewListResult">
+		SELECT 
+		 CONCAT(f.file_id, '.', f.file_type) AS imageUrl,
+		 p.name AS productName,
+		 oi.quantity AS quantity,
+		 oi.price AS price,
+		 r.review_id AS reviewId,
+		 r.use_yn AS reviewUseYn,
+		 r.rating AS reviewRating,
+		 r.comment AS reviewComment,
+		 r.reply AS reviewReply,
+		 oi.order_item_id AS orderItemId,
+		 oi.create_date AS orderItemCreateDate
+		FROM orderItems oi 
+		INNER JOIN orders o ON o.order_id =oi.order_id 
+		INNER JOIN users u ON u.user_id =o.user_id
+		INNER JOIN product p ON p.product_id =oi.product_id 
+		LEFT OUTER JOIN file f ON p.product_id=f.reference_id AND f.reference_type='PRODUCT_IMG' AND f.use_yn='Y'
+		LEFT OUTER JOIN review r ON r.order_item_id =oi.order_item_id 
+		WHERE u.user_id = #{userId}
+		AND oi.status=#{orderItemStatus}
+        <choose>
+            <when test="type == 'REVIEWABLE'">
+                AND r.review_id IS NULL
+            </when>
+            <when test="type == 'REVIEWED'">
+                AND r.review_id IS NOT NULL
+            </when>
+        </choose>
+        <if test="orderItemId != null">
+            AND oi.order_item_id <![CDATA[<]]> #{orderItemId}
+        </if>
+        ORDER BY oi.order_item_id DESC
+        LIMIT #{limit}
+    </select>
 </mapper>

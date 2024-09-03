@@ -16,12 +16,14 @@ public class ReviewRequest {
     	private Integer productId;
         @NotBlank(message = "sortBy cannot be null")
     	@Pattern(
-                regexp = "RECENT|RATING_DESC|RATING_ASC",
+                regexp = "LATEST|OLDEST|HIGHRATING|LOWRATING",
                 message = "Invalid sortBy"
         )
         private String sortBy;
         @Min(value = 0, message = "reviewId must be greater than or equal to 0")
         private Integer reviewId;
+        @Min(value = 1, message = "rating must be greater than or equal to 1")
+        private Integer rating;
 	}
     @Getter
     @Setter
@@ -30,7 +32,7 @@ public class ReviewRequest {
         @Min(value = 0, message = "productId must be greater than or equal to 0")
     	private Integer productId;
     	@NotNull(message = "rating cannot be null")
-        @Min(value = 0, message = "rating must be greater than or equal to 0")
+        @Min(value = 1, message = "rating must be greater than or equal to 1")
     	private Integer rating;
     	@NotBlank(message = "comment cannot be null")
     	private String comment;

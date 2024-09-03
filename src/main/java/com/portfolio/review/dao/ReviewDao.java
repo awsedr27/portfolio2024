@@ -15,4 +15,6 @@ public interface ReviewDao {
 
 	int insertReview(ReviewSaveQuery reviewSaveQuery);
 
+	int selectReviewCnt(Integer productId);
+
 }

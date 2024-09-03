@@ -1,7 +1,5 @@
 package com.portfolio.review.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.portfolio.review.dto.ReviewDto.ReviewListResult;
+import com.portfolio.review.dto.ReviewDto.ReviewListWithCount;
 import com.portfolio.review.dto.ReviewRequest.ReviewListRequest;
 import com.portfolio.review.dto.ReviewRequest.ReviewSaveRequest;
 import com.portfolio.review.dto.ReviewResponse.ReviewListResponse;
@@ -35,15 +33,15 @@ public class ReviewController {
     		HttpServletResponse httpServletResponse) {
     	try {
     		ReviewListServiceDto rq =new ReviewListServiceDto(reviewListRequest);
-    		List<ReviewListResult> result=reviewService.getReviewList(rq);
+    		ReviewListWithCount result=reviewService.getReviewListWithCount(rq);
     		ReviewListResponse rs=new ReviewListResponse();
-    		rs.setReviewList(result);
+    		rs.setReviewCnt(result.getReviewCnt());
+    		rs.setReviewList(result.getReviewList());
     	    return ResponseEntity.status(HttpStatus.OK).body(rs);
     	}catch (Exception e) {
     		log.error("리뷰 목록 불러오기 실패 "+e.toString());
     		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("리뷰 목록 불러오기 실패했습니다");
 		}
-    
     }
     @PostMapping("/save")
     public ResponseEntity<?> reviewSave(@Valid @RequestBody ReviewSaveRequest reviewSaveRequest,

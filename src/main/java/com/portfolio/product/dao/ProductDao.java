@@ -8,6 +8,7 @@ import com.portfolio.product.dto.ProductDto.Product;
 import com.portfolio.product.dto.ProductDto.ProductDetailResult;
 import com.portfolio.product.dto.ProductDto.ProductListQuery;
 import com.portfolio.product.dto.ProductDto.ProductListResult;
+import com.portfolio.product.dto.ProductDto.ProductUpdateQuantityQuery;
 
 @Mapper
 public interface ProductDao {
@@ -16,5 +17,6 @@ public interface ProductDao {
 	ProductDetailResult selectProductDetail(Integer productId);
 	Product selectProduct(Integer productId);
 	Product selectProductWithExclusiveLock(Integer productId);
+	int updateQuantity(ProductUpdateQuantityQuery productUpdateQuantityQuery);
 
 }

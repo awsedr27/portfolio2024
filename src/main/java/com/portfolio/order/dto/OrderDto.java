@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.portfolio.order.dto.OrderServiceDto.OrderCancelServiceDto;
 import com.portfolio.order.dto.OrderServiceDto.OrderItemCancelServiceDto;
+import com.portfolio.order.dto.OrderServiceDto.MyPageReviewListServiceDto;
 import com.portfolio.order.dto.OrderServiceDto.OrderListServiceDto;
 
 import lombok.Getter;
@@ -101,6 +102,11 @@ public class OrderDto {
     	private String userId;
     	private Integer totalPrice;
     	private String status;
+    	
+        private String postcode;
+        private String roadAddress;
+        private String jibunAddress;
+        private String detailAddress;
 	}
     @Getter
     @Setter
@@ -124,5 +130,35 @@ public class OrderDto {
     		this.price=price;
     	}
 	}
-
+    @Getter
+    @Setter
+	public static class MyPageReviewListQuery {
+    	public MyPageReviewListQuery() {
+    		
+    	}
+    	public MyPageReviewListQuery(MyPageReviewListServiceDto serviceDto) {
+			this.orderItemId=serviceDto.getOrderItemId();
+			this.type=serviceDto.getType();
+		}
+		private String userId;
+    	private String type;
+    	private Integer orderItemId;
+    	private String orderItemStatus;
+    	private int limit;
+	}
+    @Getter
+    @Setter
+	public static class MyPageReviewListResult {
+        private String imageUrl; 
+        private String productName; 
+        private Integer quantity; 
+        private Integer price; 
+        private Integer reviewId; 
+        private String reviewUseYn; 
+        private Integer reviewRating; 
+        private String reviewComment;
+        private String reviewReply; 
+        private Integer orderItemId; 
+        private Timestamp orderItemCreateDate;
+	}
 }

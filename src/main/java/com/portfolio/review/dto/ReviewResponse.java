@@ -12,5 +12,6 @@ public class ReviewResponse {
     @Setter
 	public static class ReviewListResponse{
 		List<ReviewListResult> reviewList;
+		int reviewCnt;
 	}
 }

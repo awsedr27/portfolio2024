@@ -80,5 +80,10 @@
         WHERE product_id=#{productId}
         FOR UPDATE;
     </select>
-
+    <update id="updateQuantity" parameterType="com.portfolio.product.dto.ProductDto$ProductUpdateQuantityQuery">
+	    UPDATE product
+		SET
+	    quantity = #{quantity}
+		WHERE product_id = #{productId}
+    </update>
 </mapper>

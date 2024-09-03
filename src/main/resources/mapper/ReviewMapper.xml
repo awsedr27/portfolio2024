@@ -6,33 +6,45 @@
 <mapper namespace="com.portfolio.review.dao.ReviewDao">
     <select id="selectReviewList" parameterType="com.portfolio.review.dto.ReviewDto$ReviewListQuery" resultType="com.portfolio.review.dto.ReviewDto$ReviewListResult">
         SELECT 
-			review_id,
-			product_id,
-			rating,
-			comment,
-			reply,
-			create_date,
-			modify_date
+			r.review_id,
+			r.rating,
+			r.comment,
+			r.reply,
+			r.create_date,
+			u.username
         FROM 
-            review
-        WHERE use_yn = 'Y'
-        AND product_id=#{productId}
-            <if test="reviewId != null">
-                AND review_id <![CDATA[<]]> #{reviewId}
-            </if>
+            review r
+       	INNER JOIN orderItems oi ON oi.order_item_id =r.order_item_id AND oi.product_id =#{productId}
+        INNER JOIN orders o ON o.order_id =oi.order_id
+        INNER JOIN users u ON u.user_id =o.user_id 
+        WHERE r.use_yn = 'Y'
 	    <choose>
-	        <when test="sortBy == 'RECENT'">
-	           ORDER BY create_date DESC, review_id DESC
+	        <when test="sortBy == 'LATEST'">
+		        <if test="reviewId != null">
+		            AND r.review_id <![CDATA[<]]> #{reviewId}
+		        </if>
+	           ORDER BY r.create_date DESC, r.review_id DESC
 	        </when>
-	        <when test="sortBy == 'RATING_DESC'">
-	           ORDER BY rating DESC, create_date DESC
+	        <when test="sortBy == 'HIGHRATING'">
+		        <if test="rating != null and reviewId != null">
+		            AND (r.rating <![CDATA[<]]> #{rating}
+		            OR (r.rating = #{rating} AND r.review_id <![CDATA[<]]> #{reviewId}))
+		        </if>
+	           ORDER BY r.rating DESC, r.review_id DESC
 	        </when>
-	        <when test="sortBy == 'RATING_ASC'">
-	           ORDER BY rating ASC, create_date DESC
+	        <when test="sortBy == 'LOWRATING'">
+		        <if test="rating != null and reviewId != null">
+		            AND (r.rating <![CDATA[>]]> #{rating}
+		            OR (r.rating = #{rating} AND r.review_id <![CDATA[<]]> #{reviewId}))
+		        </if>
+	           ORDER BY r.rating ASC, r.create_date DESC
 	        </when>
-	        <otherwise>
-	           ORDER BY create_date DESC, review_id DESC
-	        </otherwise>
+	        <when test="sortBy == 'OLDEST'">
+		        <if test="reviewId != null">
+		            AND r.review_id <![CDATA[>]]> #{reviewId}
+		        </if>
+	           ORDER BY r.create_date ASC, r.review_id ASC
+	        </when>
 	    </choose>
         LIMIT #{limit}
     </select>
@@ -49,4 +61,12 @@
 			    #{comment}
 			)
 	  </insert>
+	  <select id="selectReviewCnt" parameterType="Int" resultType="Int">
+        SELECT 
+        	COUNT(*)
+        FROM 
+            review r
+        INNER JOIN orderItems oi ON oi.order_item_id =r.order_item_id AND oi.product_id =#{productId}
+        WHERE r.use_yn = 'Y'
+	  </select>
 </mapper>

@@ -53,6 +53,9 @@ public class ProductController {
     	try {
     		
     		ProductDetailResult productDetail=productService.getProductInfo(productDetailRequest.getProductId());
+    		if(productDetail==null) {
+    			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    		}
     		ProductDetailResponse rs=new ProductDetailResponse(productDetail);
     		
     	    return ResponseEntity.status(HttpStatus.OK).body(rs);

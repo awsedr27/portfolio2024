@@ -13,14 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.portfolio.common.CommonEnum.OrderStatus;
 import com.portfolio.exception.CustomException;
+import com.portfolio.order.dto.OrderDto.MyPageReviewListResult;
 import com.portfolio.order.dto.OrderDto.OrderListResult;
 import com.portfolio.order.dto.OrderRequest.OrderCancelRequest;
 import com.portfolio.order.dto.OrderRequest.OrderItemCancelRequest;
+import com.portfolio.order.dto.OrderRequest.MyPageReviewListRequest;
 import com.portfolio.order.dto.OrderRequest.OrderListRequest;
 import com.portfolio.order.dto.OrderRequest.OrderSaveRequest;
+import com.portfolio.order.dto.OrderResponse.MyPageReviewListResponse;
 import com.portfolio.order.dto.OrderResponse.OrderListResponse;
 import com.portfolio.order.dto.OrderServiceDto.OrderCancelServiceDto;
 import com.portfolio.order.dto.OrderServiceDto.OrderItemCancelServiceDto;
+import com.portfolio.order.dto.OrderServiceDto.MyPageReviewListServiceDto;
 import com.portfolio.order.dto.OrderServiceDto.OrderItemSaveServiceDTO;
 import com.portfolio.order.dto.OrderServiceDto.OrderListServiceDto;
 import com.portfolio.order.dto.OrderServiceDto.OrderSaveServiceDto;
@@ -39,8 +43,7 @@ public class OrderController {
 	OrderService orderService;
 	
     @PostMapping("/list")
-    public ResponseEntity<?> orderList(@Valid @RequestBody OrderListRequest orderListRequest,
-    		HttpServletResponse httpServletResponse) {
+    public ResponseEntity<?> orderList(@Valid @RequestBody OrderListRequest orderListRequest) {
     	try {
     		OrderListServiceDto orderListServiceDto=new OrderListServiceDto(orderListRequest);
     		List<OrderListResult> result=orderService.getOrderList(orderListServiceDto);
@@ -70,8 +73,7 @@ public class OrderController {
     
     }
     @PostMapping("/orderItem/cancel")
-    public ResponseEntity<?> orderItemCancel(@Valid @RequestBody OrderItemCancelRequest orderItemCancelRequest,
-    		HttpServletResponse httpServletResponse) {
+    public ResponseEntity<?> orderItemCancel(@Valid @RequestBody OrderItemCancelRequest orderItemCancelRequest) {
     	try {
     		OrderItemCancelServiceDto orderItemCancelServiceDto=new OrderItemCancelServiceDto(orderItemCancelRequest);
     		int result=orderService.cancelOrderItem(orderItemCancelServiceDto);
@@ -87,8 +89,7 @@ public class OrderController {
     }
     //주문
     @PostMapping("/save")
-    public ResponseEntity<?> orderSave(@Valid @RequestBody OrderSaveRequest orderSaveRequest,
-    		HttpServletResponse httpServletResponse) {
+    public ResponseEntity<?> orderSave(@Valid @RequestBody OrderSaveRequest orderSaveRequest) {
     	try {
     		OrderSaveServiceDto orderSaveServiceDto=new OrderSaveServiceDto();
     		List<OrderItemSaveServiceDTO> saveServiceDto = orderSaveRequest.getOrderSaveList().stream()
@@ -99,6 +100,10 @@ public class OrderController {
                         return serviceItem;
                     }).collect(Collectors.toList());
     		orderSaveServiceDto.setOrderItems(saveServiceDto);
+    		orderSaveServiceDto.setPostcode(orderSaveRequest.getPostcode());
+    		orderSaveServiceDto.setRoadAddress(orderSaveRequest.getRoadAddress());
+    		orderSaveServiceDto.setJibunAddress(orderSaveRequest.getJibunAddress());
+    		orderSaveServiceDto.setDetailAddress(orderSaveRequest.getDetailAddress());
     		int result = orderService.saveOrder(orderSaveServiceDto);
     	    return ResponseEntity.status(HttpStatus.OK).body("상품 주문을 완료했습니다");
     	}catch(CustomException e) {
@@ -110,6 +115,17 @@ public class OrderController {
 		}
     
     }
-    
-    
+    @PostMapping("/myPage/review/list")
+    public ResponseEntity<?> myPageReviewList(@Valid @RequestBody MyPageReviewListRequest myPageReviewListRequest) {
+    	try {
+    		MyPageReviewListServiceDto serviceDto=new MyPageReviewListServiceDto(myPageReviewListRequest);
+    		List<MyPageReviewListResult> result = orderService.getMyPageReviewList(serviceDto);
+    		MyPageReviewListResponse rs=new MyPageReviewListResponse();
+    		rs.setMyPageReviewList(result);
+    	    return ResponseEntity.status(HttpStatus.OK).body(rs);
+    	}catch (Exception e) {
+    		log.error("마이페이지 리뷰리스트 불러내는데 실패했습니다 "+e.toString());
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("마이페이지 리뷰리스트 불러내는데 실패했습니다");
+		}
+    }
 }

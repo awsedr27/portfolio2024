@@ -19,10 +19,12 @@ public class ReviewServiceDto {
 			this.productId=reviewListRequest.getProductId();
 			this.sortBy=reviewListRequest.getSortBy();
 			this.reviewId=reviewListRequest.getReviewId();
+			this.rating=reviewListRequest.getRating();
 		}
 		private Integer productId;
         private String sortBy;
         private Integer reviewId;
+        private Integer rating;
 	}
     @Getter
     @Setter

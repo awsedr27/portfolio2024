@@ -68,11 +68,19 @@
 			INSERT INTO orders (
 				user_id,
 				total_price,
-				status
+				status,
+				post_code,
+				road_address,
+				jibun_address,
+				detail_address
 			) VALUES (
 			    #{userId},
 			    #{totalPrice},
-			    #{status}
+			    #{status},
+			    #{postcode},
+		    	#{roadAddress},
+		      	#{jibunAddress},
+		      	#{detailAddress}
 			)
 		    <selectKey keyProperty="orderId" resultType="int" order="AFTER">
 		        SELECT LAST_INSERT_ID()

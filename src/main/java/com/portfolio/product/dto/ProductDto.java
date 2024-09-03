@@ -29,7 +29,6 @@ public class ProductDto {
 	    private String name;
 	    private String description;
 	    private Integer price;
-//	    private Integer categoryId;
 	    private String categoryName;
 	    private String imageUrl;
 	    private Timestamp createDate;
@@ -63,6 +62,19 @@ public class ProductDto {
 	    private Integer categoryId;
 	    private String imageUrl;
 	    private Timestamp createDate;
+	}
+    @Getter
+    @Setter
+	public static class ProductUpdateQuantityQuery {
+	    private Integer productId;
+	    private Integer quantity;
+	    public ProductUpdateQuantityQuery() {
+	    	
+	    }
+	    public ProductUpdateQuantityQuery(int productId,int quantity) {
+	    	this.productId=productId;
+	    	this.quantity=quantity;
+	    }
 	}
     
 }

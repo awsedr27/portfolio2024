@@ -6,21 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.portfolio.common.UserContext;
 import com.portfolio.exception.CustomException;
-import com.portfolio.user.dto.UserDto.NaverUserProfile;
 import com.portfolio.user.dto.UserDto.User;
 import com.portfolio.user.dto.UserRequest.NaverLoginRequest;
+import com.portfolio.user.dto.UserRequest.UserMyPageInfoUpdateRequest;
 import com.portfolio.user.dto.UserResponse;
-import com.portfolio.user.dto.UserResponse.LoginResponse;
+import com.portfolio.user.dto.UserResponse.UserMyPageInfoResponse;
+import com.portfolio.user.dto.UserServiceDto.UserUpdateServiceDto;
 import com.portfolio.user.service.NaverLoginService;
-import com.portfolio.user.service.NaverLoginServiceImpl;
 import com.portfolio.user.service.UserService;
 import com.portfolio.utils.JwtUtil;
 
@@ -29,9 +28,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/user")
+@Slf4j
 public class UserController {
 	
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -44,6 +45,9 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	UserContext userContext;
 	
     @PostMapping("/login/naver")
     public ResponseEntity<String> loginNaver(@Valid @RequestBody NaverLoginRequest naverLoginRequest,HttpServletResponse httpServletResponse) {
@@ -89,7 +93,29 @@ public class UserController {
     		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).headers(headers).body("통신실패");
 		}
     }
+
+    @PostMapping("/myPage/info")
+    public ResponseEntity<?> userMyPageInfo() {
+    	try {
+    		User user=userContext.getUserInfo();
+    		UserMyPageInfoResponse rs=new UserMyPageInfoResponse(user);
+    	    return ResponseEntity.status(HttpStatus.OK).body(rs);
+    	}catch (Exception e) {
+    		log.error("마이페이지 유저정보 불러오기 실패 "+e.toString());
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("마이페이지 유저정보 불러오기 실패했습니다");
+		}
     
-
-
+    }
+    @PostMapping("/myPage/info/update")
+    public ResponseEntity<?> userMyPageInfoUpdate(@Valid @RequestBody UserMyPageInfoUpdateRequest userMyPageInfoUpdateRequest) {
+    	try {
+    		UserUpdateServiceDto UserUpdateServiceDto=new UserUpdateServiceDto(userMyPageInfoUpdateRequest);
+    		userService.updateUser(UserUpdateServiceDto);
+    	    return ResponseEntity.status(HttpStatus.OK).body("업데이트 성공");
+    	}catch (Exception e) {
+    		log.error("마이페이지 유저정보 수정 실패 "+e.toString());
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("마이페이지 유저정보 수정 실패했습니다");
+		}
+    
+    }
 }

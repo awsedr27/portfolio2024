@@ -1,5 +1,9 @@
 package com.portfolio.user.dto;
 
+import java.sql.Timestamp;
+
+import com.portfolio.user.dto.UserDto.User;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,5 +34,26 @@ public class UserResponse {
     		this.refreshToken=refreshToken;
     	}
     	
+    }
+    @Getter
+    @Setter
+    public static class UserMyPageInfoResponse{
+        private String username;
+        private String email;
+        private String gender;
+        private String birthday;
+        private String birthyear;
+        private String nickname;
+    	public UserMyPageInfoResponse() {
+    		
+    	}
+    	public UserMyPageInfoResponse(User user) {
+    		this.username=user.getUsername();
+    		this.email=user.getEmail();
+    		this.gender=user.getGender();
+    		this.birthday=user.getBirthday();
+    		this.birthyear=user.getBirthyear();
+    		this.nickname=user.getNickname();
+    	}
     }
 }

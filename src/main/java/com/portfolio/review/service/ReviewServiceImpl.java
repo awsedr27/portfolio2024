@@ -10,6 +10,7 @@ import com.portfolio.common.UserContext;
 import com.portfolio.review.dao.ReviewDao;
 import com.portfolio.review.dto.ReviewDto.ReviewListQuery;
 import com.portfolio.review.dto.ReviewDto.ReviewListResult;
+import com.portfolio.review.dto.ReviewDto.ReviewListWithCount;
 import com.portfolio.review.dto.ReviewDto.ReviewSaveQuery;
 import com.portfolio.review.dto.ReviewServiceDto.ReviewListServiceDto;
 import com.portfolio.review.dto.ReviewServiceDto.ReviewSaveServiceDto;
@@ -27,10 +28,13 @@ public class ReviewServiceImpl implements ReviewService {
 	UserContext userContext;
 
 	@Override
-	public List<ReviewListResult> getReviewList(ReviewListServiceDto rq) {
+	public ReviewListWithCount getReviewListWithCount(ReviewListServiceDto rq) {
 		ReviewListQuery reviewListQuery=new ReviewListQuery(rq);
+		int reviewCnt=reviewDao.selectReviewCnt(rq.getProductId());
 		reviewListQuery.setLimit(pagingSize);
-		return reviewDao.selectReviewList(reviewListQuery);
+		List<ReviewListResult> reivewList=reviewDao.selectReviewList(reviewListQuery);
+		ReviewListWithCount rs=new ReviewListWithCount(reivewList,reviewCnt);
+		return rs;
 	}
 
 	@Override

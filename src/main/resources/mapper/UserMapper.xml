@@ -13,6 +13,9 @@
 		    nickname,
 		    use_yn ,
 		    naver_sns_id ,
+			gender,
+		    birthday,
+			birthyear,
 		    create_date ,
 		    modify_date 
 		FROM
@@ -21,33 +24,46 @@
 		    naver_sns_id = #{naverSnsId}
   </select>
   
-  <insert id="insertUserInfo" parameterType="com.portfolio.user.dto.UserDto$User">
+  <insert id="insertUser" parameterType="com.portfolio.user.dto.UserDto$User">
 		INSERT INTO users (
 		    username,
 		    email,
 		    nickname,
-		    naver_sns_id
+		    naver_sns_id,
+		    gender,
+		    birthday,
+			birthyear
 		) VALUES (
 		    #{username},
 		    #{email},
 		    #{nickname},
-		    #{naverSnsId}
+		    #{naverSnsId},
+		    #{gender},
+		    #{birthday},
+		    #{birthyear}
 		)
 		<selectKey keyProperty="userId" resultType="String" order="AFTER" >
 			select user_id from users where naver_sns_id=#{naverSnsId}
 		</selectKey>
   </insert>
-  <update id="updateUserInfo" parameterType="com.portfolio.user.dto.UserDto$User">
+  <update id="updateUser" parameterType="com.portfolio.user.dto.UserDto$User">
     UPDATE users
     <trim prefix="SET" suffixOverrides="," suffix=" WHERE user_id = #{userId}">
         <if test="username != null and !username.isEmpty()">
             username = #{username},
         </if>
-        <if test="email != null and !email.isEmpty()">
             email = #{email},
-        </if>
         <if test="nickname != null and !nickname.isEmpty()">
             nickname = #{nickname},
+        </if>
+        <if test="gender != null and !gender.isEmpty()">
+            gender = #{gender},
+        </if>
+        <if test="birthday != null and !birthday.isEmpty()">
+            birthday = #{birthday},
+        </if>
+        <if test="birthyear != null and !birthyear.isEmpty()">
+            birthyear = #{birthyear},
         </if>
         <if test="useYn != null and !useYn.isEmpty()">
             use_yn = #{useYn}
@@ -63,6 +79,9 @@
 		    nickname,
 		    use_yn ,
 		    naver_sns_id ,
+		    gender,
+		    birthday,
+			birthyear,
 		    create_date ,
 		    modify_date 
 		FROM

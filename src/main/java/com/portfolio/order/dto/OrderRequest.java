@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -38,7 +39,15 @@ public class OrderRequest {
     @Setter
 	public static class OrderSaveRequest {
         @NotEmpty(message = "orderSaveList cannot be empty")
-    	List<@Valid OrderItemSaveRequest> orderSaveList;
+        private List<@Valid OrderItemSaveRequest> orderSaveList;
+        @NotBlank(message = "postcode cannot be blank")
+        private String postcode;
+        @NotBlank(message = "roadAddress cannot be blank")
+        private String roadAddress;
+        @NotBlank(message = "jibunAddress cannot be blank")
+        private String jibunAddress;
+        @NotBlank(message = "detailAddress cannot be blank")
+        private String detailAddress;
 	}
     @Getter
     @Setter
@@ -49,5 +58,17 @@ public class OrderRequest {
     	@NotNull(message = "quantity cannot be null")
         @Min(value = 1, message = "quantity must be greater than or equal to 1")
     	private Integer quantity;
+	}
+    @Getter
+    @Setter
+    public static class MyPageReviewListRequest {
+    	@NotNull(message = "type ID cannot be null")
+        @Pattern(
+                regexp = "REVIEWABLE|REVIEWED",
+                message = "Invalid orderItem review type"
+        )
+    	private String type;
+        @Min(value = 0, message = "orderItemId must be greater than or equal to 0")
+    	private Integer orderItemId;
 	}
 }
