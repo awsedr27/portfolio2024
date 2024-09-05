@@ -5,12 +5,23 @@ import java.util.List;
 
 import com.portfolio.review.dto.ReviewServiceDto.ReviewListServiceDto;
 import com.portfolio.review.dto.ReviewServiceDto.ReviewSaveServiceDto;
+import com.portfolio.review.dto.ReviewServiceDto.ReviewUpdateServiceDto;
 
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 public class ReviewDto {
-
+	private Integer reviewId;
+	private Integer orderItemId;
+	private String useYn;
+	private Integer rating;
+	private String comment;
+	private String reply;
+	private Timestamp createDate;
+	private Timestamp modifyDate;
+	
     @Getter
     @Setter
 	public static class ReviewListQuery {
@@ -54,13 +65,30 @@ public class ReviewDto {
     @Setter
 	public static class ReviewSaveQuery {
     	public ReviewSaveQuery(ReviewSaveServiceDto rq) {
-    		this.productId=rq.getProductId();
+    		this.orderItemId=rq.getOrderItemId();
     		this.rating=rq.getRating();
     		this.comment=rq.getComment();
 		}
-    	private Integer productId;
+    	private Integer orderItemId;
     	private Integer rating;
     	private String comment;
-    	private String userId;
+	}
+    @Getter
+    @Setter
+	public static class ReviewUpdateQuery {
+    	public ReviewUpdateQuery(ReviewUpdateServiceDto rq) {
+    		this.reviewId=rq.getReviewId();
+    		this.rating=rq.getRating();
+    		this.comment=rq.getComment();
+		}
+    	private Integer reviewId;
+    	private Integer rating;
+    	private String comment;
+	}
+    @Getter
+    @Setter
+	public static class ReviewDeleteQuery {
+    	private Integer reviewId;
+    	private String useYn;
 	}
 }

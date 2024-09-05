@@ -2,6 +2,7 @@ package com.portfolio.review.dto;
 
 import com.portfolio.review.dto.ReviewRequest.ReviewListRequest;
 import com.portfolio.review.dto.ReviewRequest.ReviewSaveRequest;
+import com.portfolio.review.dto.ReviewRequest.ReviewUpdateRequest;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -30,12 +31,25 @@ public class ReviewServiceDto {
     @Setter
 	public static class ReviewSaveServiceDto {
     	public ReviewSaveServiceDto(ReviewSaveRequest reviewSaveRequest) {
-			this.productId=reviewSaveRequest.getProductId();
+			this.orderItemId=reviewSaveRequest.getOrderItemId();
 			this.rating=reviewSaveRequest.getRating();
 			this.comment=reviewSaveRequest.getComment();
 			
 		}
-    	private Integer productId;
+    	private Integer orderItemId;
+    	private Integer rating;
+    	private String comment;
+	}
+    @Getter
+    @Setter
+	public static class ReviewUpdateServiceDto {
+    	public ReviewUpdateServiceDto(ReviewUpdateRequest rq) {
+			this.reviewId=rq.getReviewId();
+			this.rating=rq.getRating();
+			this.comment=rq.getComment();
+			
+		}
+    	private Integer reviewId;
     	private Integer rating;
     	private String comment;
 	}

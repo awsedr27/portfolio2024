@@ -28,13 +28,32 @@ public class ReviewRequest {
     @Getter
     @Setter
 	public static class ReviewSaveRequest {
-    	@NotNull(message = "productId cannot be null")
-        @Min(value = 0, message = "productId must be greater than or equal to 0")
-    	private Integer productId;
+    	@NotNull(message = "orderItemId cannot be null")
+        @Min(value = 1, message = "orderItemId must be greater than or equal to 1")
+    	private Integer orderItemId;
     	@NotNull(message = "rating cannot be null")
         @Min(value = 1, message = "rating must be greater than or equal to 1")
     	private Integer rating;
     	@NotBlank(message = "comment cannot be null")
     	private String comment;
+	}
+    @Getter
+    @Setter
+	public static class ReviewUpdateRequest {
+    	@NotNull(message = "reviewId cannot be null")
+        @Min(value = 1, message = "reviewId must be greater than or equal to 1")
+    	private Integer reviewId;
+    	@NotNull(message = "rating cannot be null")
+        @Min(value = 1, message = "rating must be greater than or equal to 1")
+    	private Integer rating;
+    	@NotBlank(message = "comment cannot be null")
+    	private String comment;
+	}
+    @Getter
+    @Setter
+	public static class ReviewDeleteRequest {
+    	@NotNull(message = "reviewId cannot be null")
+        @Min(value = 1, message = "reviewId must be greater than or equal to 1")
+    	private Integer reviewId;
 	}
 }
