@@ -54,7 +54,6 @@ public class OrderController {
     		log.error("주문 목록 불러오기 실패 "+e.toString());
     		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("주문 목록 불러오기 실패했습니다");
 		}
-    
     }
     @PostMapping("/cancel")
     public ResponseEntity<?> orderCancel(@Valid @RequestBody OrderCancelRequest orderCancelRequest,

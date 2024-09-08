@@ -21,13 +21,13 @@ public class OrderServiceDto {
     @Setter
 	public static class OrderListServiceDto {
     	private String status;
-        private Timestamp createDate;
+    	private Integer orderId;
         public OrderListServiceDto() {
         	
         }
 		public OrderListServiceDto(OrderListRequest orderListRequest) {
 			this.status=orderListRequest.getStatus();
-			this.createDate=orderListRequest.getCreateDate();
+			this.orderId=orderListRequest.getOrderId();
 		}
 
 	}

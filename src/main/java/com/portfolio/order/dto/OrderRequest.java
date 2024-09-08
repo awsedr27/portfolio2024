@@ -1,6 +1,5 @@
 package com.portfolio.order.dto;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import jakarta.validation.Valid;
@@ -17,11 +16,12 @@ public class OrderRequest {
     @Setter
 	public static class OrderListRequest {
         @Pattern(
-            regexp = "PENDING|PROCESSING|SHIPPED|DELIVERED|CANCELLED",
+            regexp = "PENDING|PROCESSING|SHIPPED|COMPLETED|CANCELLED|",
             message = "Invalid order status"
         )
         private String status;
-        private Timestamp createDate;
+        @Min(value = 1, message = "orderId must be greater than or equal to 1")
+    	private Integer orderId;
 	}
     @Getter
     @Setter
@@ -62,7 +62,7 @@ public class OrderRequest {
     @Getter
     @Setter
     public static class MyPageReviewListRequest {
-    	@NotNull(message = "type ID cannot be null")
+    	@NotBlank(message = "type ID cannot be null")
         @Pattern(
                 regexp = "REVIEWABLE|REVIEWED",
                 message = "Invalid orderItem review type"

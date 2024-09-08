@@ -5,45 +5,54 @@
   
 <mapper namespace="com.portfolio.order.dao.OrderDao">
 
-    <resultMap id="orderResultMap" type="com.portfolio.order.dto.OrderDto$OrderListResult">
-        <id property="orderId" column="order_id"/>
-        <result property="totalPrice" column="total_price"/>
-        <result property="status" column="status"/>
-        <result property="createDate" column="create_date"/>
-        <result property="modifyDate" column="modify_date"/>
-        <collection property="orderItems" ofType="com.portfolio.order.dto.OrderDto$OrderItemDto">
-            <id property="orderItemId" column="order_item_id"/>
-            <result property="orderId" column="order_id"/>
-            <result property="productId" column="product_id"/>
-            <result property="quantity" column="quantity"/>
-            <result property="price" column="price"/>
-            <result property="createDate" column="oi_create_date"/>
-            <result property="modifyDate" column="oi_modify_date"/>
-        </collection>
-    </resultMap>
+	<resultMap id="orderResultMap" type="com.portfolio.order.dto.OrderDto$OrderListResult">
+	    <id property="orderId" column="order_id"/>
+	    <result property="totalPrice" column="total_price"/>
+	    <result property="status" column="status"/>
+	    <result property="postcode" column="postcode"/>
+	    <result property="roadAddress" column="road_address"/>
+	    <result property="jibunAddress" column="jibun_address"/>
+	    <result property="detailAddress" column="detail_address"/>
+	    <result property="createDate" column="create_date"/>
+	    <collection property="orderItems" ofType="com.portfolio.order.dto.OrderDto$OrderItemResult">
+	        <id property="orderItemId" column="order_item_id"/>
+	        <result property="imageUrl" column="image_url"/>
+	        <result property="productName" column="product_name"/>
+	        <result property="quantity" column="quantity"/>
+	        <result property="price" column="price"/>
+	        <result property="status" column="orderItemStatus"/>
+	        <result property="createDate" column="oi_create_date"/>
+	    </collection>
+	</resultMap>
     <select id="selectOrderList" parameterType="com.portfolio.order.dto.OrderDto$OrderListQuery" resultMap="orderResultMap">
         SELECT
             o.order_id,
             o.total_price,
             o.status,
+            o.post_code ,
+            o.road_address ,
+            o.jibun_address ,
+            o.detail_address ,
             o.create_date,
-            o.modify_date,
             oi.order_item_id,
-            oi.product_id,
+            CONCAT(f.file_id, '.', f.file_type) AS image_url,
+            p.name as product_name,
             oi.quantity,
             oi.price,
-            oi.create_date AS oi_create_date,
-            oi.modify_date AS oi_modify_date
+            oi.status as orderItemStatus,
+            oi.create_date AS oi_create_date
         FROM orders o
-        LEFT JOIN orderItems oi ON o.order_id = oi.order_id
+        INNER JOIN orderItems oi ON o.order_id = oi.order_id
+        INNER JOIN product p ON p.product_id =oi.product_id 
+        LEFT OUTER JOIN file f ON oi.product_id=f.reference_id AND f.reference_type='PRODUCT_IMG' AND f.use_yn='Y'
         WHERE o.user_id=#{userId}
         <if test="status != null and status != ''">
             AND o.status = #{status}
         </if>
-        <if test="createDate != null">
-            AND o.create_date <![CDATA[<]]> #{createDate}
+        <if test="orderId != null">
+            AND o.order_id <![CDATA[<]]> #{orderId}
         </if>
-        ORDER BY o.create_date DESC
+        ORDER BY o.order_id DESC
         LIMIT #{limit}
     </select>
     <select id="selectOrder" parameterType="Int" resultType="com.portfolio.order.dto.OrderDto">

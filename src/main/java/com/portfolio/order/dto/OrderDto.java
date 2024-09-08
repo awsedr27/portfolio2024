@@ -37,7 +37,7 @@ public class OrderDto {
     @Getter
     @Setter
 	public static class OrderListQuery {
-        private Timestamp createDate;
+    	private Integer orderId;
     	private String status;
     	private String userId;
 	    private int limit;
@@ -46,18 +46,32 @@ public class OrderDto {
 	    }
 		public OrderListQuery(OrderListServiceDto orderListServiceDto) {
 			this.status=orderListServiceDto.getStatus();
-			this.createDate=orderListServiceDto.getCreateDate();
+			this.orderId=orderListServiceDto.getOrderId();
 		}
 	}
+    @Getter
+    @Setter
+    public static class OrderItemResult {
+        private Integer orderItemId;
+        private String imageUrl;
+        private String productName;
+        private Integer quantity;
+        private Integer price;
+        private String status;
+        private Timestamp createDate;
+    }
     @Getter
     @Setter
 	public static class OrderListResult {
         private Integer orderId;
         private Integer totalPrice;
         private String status;
+        private String postcode;
+        private String roadAddress;
+        private String jibunAddress;
+        private String detailAddress;
         private Timestamp createDate;
-        private Timestamp modifyDate;
-        private List<OrderItemDto> orderItems;
+        private List<OrderItemResult> orderItems;
 	}
     @Getter
     @Setter
