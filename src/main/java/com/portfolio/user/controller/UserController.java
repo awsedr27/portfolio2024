@@ -57,7 +57,10 @@ public class UserController {
     	    headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + result.getAccessToken());
             headers.add(HttpHeaders.SET_COOKIE, "refreshToken=" + result.getRefreshToken() + "; Path=/; HttpOnly; Max-Age=2592000;");
     	    return ResponseEntity.status(HttpStatus.OK).headers(headers).body("로그인 완료");	
-    	}catch (Exception e) {
+    	}catch (CustomException e) {
+    		logger.error("네이버 로그인 실패 "+e.toString());
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}catch (Exception e) {
     		logger.error("네이버 로그인 실패 "+e.toString());
     		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("로그인 실패");
 		}
@@ -115,6 +118,19 @@ public class UserController {
     	}catch (Exception e) {
     		log.error("마이페이지 유저정보 수정 실패 "+e.toString());
     		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("마이페이지 유저정보 수정 실패했습니다");
+		}
+    
+    }
+    @PostMapping("/delete")
+    public ResponseEntity<?> userDelete() {
+    	try {
+    		userService.deleteUser();
+    		HttpHeaders headers = new HttpHeaders();
+    		headers.add(HttpHeaders.SET_COOKIE, "refreshToken=; Path=/; HttpOnly; Max-Age=0;");
+    	    return ResponseEntity.status(HttpStatus.OK).headers(headers).body("회원 탈퇴 성공");
+    	}catch (Exception e) {
+    		log.error("회원 탈퇴 실패 "+e.toString());
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 탈퇴 실패");
 		}
     
     }

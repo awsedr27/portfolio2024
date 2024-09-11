@@ -7,4 +7,6 @@ public interface UserService {
 	User selectUser(String userId) throws Exception;
 
 	int updateUser(UserUpdateServiceDto userUpdateServiceDto);
+
+	int deleteUser();
 }

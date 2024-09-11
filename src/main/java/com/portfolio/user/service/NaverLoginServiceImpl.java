@@ -78,8 +78,9 @@ public class NaverLoginServiceImpl implements NaverLoginService {
         	if("N".equals(userInfo.getUseYn())) {
         		//활성화로 업데이트 
             	//UserInfo userInfoRq=new UserInfo(naverUserProfile.getResponse());
-            	userInfoRq.setUseYn("Y");
-        		userDao.updateUser(userInfoRq);
+//            	userInfoRq.setUseYn("Y");
+//        		userDao.updateUser(userInfoRq);
+        		throw new CustomException("사용이 중지된 아이디입니다");
         	}
         }
         

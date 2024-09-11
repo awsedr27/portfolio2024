@@ -76,8 +76,14 @@ public class OrderServiceImpl implements OrderService {
 			 throw new CustomException("잘못된 취소요청입니다(주문자가 아닙니다)");
 		}
 		if(!CommonEnum.OrderStatus.PENDING.name().equals(order.getStatus())) {
-			
 			throw new CustomException("취소할 수 없는 상태입니다.");
+		}
+		List<OrderItemDto> orderItems=orderItemsDao.selectOrderItemsByOrderId(orderCancelServiceDto.getOrderId());
+		for(OrderItemDto orderItem:orderItems) {
+			if(!CommonEnum.OrderItemStatus.CANCELLED.name().equals(orderItem.getStatus())
+					&&!CommonEnum.OrderItemStatus.PENDING.name().equals(orderItem.getStatus())) {
+				throw new CustomException("주문 아이템 중에 취소할 수 없는 상태의 아이템이 있습니다");
+			}
 		}
 		OrderCancelQuery orderCancelQuery=new OrderCancelQuery(orderCancelServiceDto);
 		orderDao.updateOrderForCancel(orderCancelQuery);

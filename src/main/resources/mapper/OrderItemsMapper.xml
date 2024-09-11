@@ -78,4 +78,17 @@
         ORDER BY oi.order_item_id DESC
         LIMIT #{limit}
     </select>
+    <select id="selectOrderItemsByOrderId" parameterType="Int" resultType="com.portfolio.order.dto.OrderDto$OrderItemDto">
+        SELECT
+			order_item_id,
+			order_id,
+			product_id,
+			quantity,
+			price,
+			status,
+			create_date,
+			modify_date
+        FROM orderItems
+        WHERE order_id=#{orderId}
+    </select>
 </mapper>

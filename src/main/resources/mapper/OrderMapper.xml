@@ -26,14 +26,14 @@
 	</resultMap>
     <select id="selectOrderList" parameterType="com.portfolio.order.dto.OrderDto$OrderListQuery" resultMap="orderResultMap">
         SELECT
-            o.order_id,
-            o.total_price,
-            o.status,
-            o.post_code ,
-            o.road_address ,
-            o.jibun_address ,
-            o.detail_address ,
-            o.create_date,
+            sub.order_id,
+            sub.total_price,
+            sub.status,
+            sub.post_code ,
+            sub.road_address ,
+            sub.jibun_address ,
+            sub.detail_address ,
+            sub.create_date,
             oi.order_item_id,
             CONCAT(f.file_id, '.', f.file_type) AS image_url,
             p.name as product_name,
@@ -41,19 +41,31 @@
             oi.price,
             oi.status as orderItemStatus,
             oi.create_date AS oi_create_date
-        FROM orders o
-        INNER JOIN orderItems oi ON o.order_id = oi.order_id
+        FROM (
+	        SELECT 
+		        o.order_id,
+		        o.total_price,
+		        o.status,
+		        o.post_code ,
+		        o.road_address ,
+		        o.jibun_address ,
+		        o.detail_address ,
+		        o.create_date
+	        FROM orders o
+	        WHERE o.user_id=#{userId}
+	        <if test="status != null and status != ''">
+	            AND o.status = #{status}
+	        </if>
+	        <if test="orderId != null">
+	            AND o.order_id <![CDATA[<]]> #{orderId}
+	        </if>
+	        ORDER BY o.order_id DESC
+	        LIMIT #{limit}
+	        ) sub
+        INNER JOIN orderItems oi ON sub.order_id = oi.order_id
         INNER JOIN product p ON p.product_id =oi.product_id 
         LEFT OUTER JOIN file f ON oi.product_id=f.reference_id AND f.reference_type='PRODUCT_IMG' AND f.use_yn='Y'
-        WHERE o.user_id=#{userId}
-        <if test="status != null and status != ''">
-            AND o.status = #{status}
-        </if>
-        <if test="orderId != null">
-            AND o.order_id <![CDATA[<]]> #{orderId}
-        </if>
-        ORDER BY o.order_id DESC
-        LIMIT #{limit}
+
     </select>
     <select id="selectOrder" parameterType="Int" resultType="com.portfolio.order.dto.OrderDto">
         SELECT

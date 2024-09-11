@@ -27,6 +27,7 @@ public class OrderRequest {
     @Setter
 	public static class OrderCancelRequest {
     	@NotNull(message = "orderId cannot be null")
+        @Min(value = 1, message = "orderId must be greater than or equal to 1")
     	private Integer orderId;
 	}
     @Getter

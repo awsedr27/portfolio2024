@@ -24,7 +24,8 @@ public interface OrderItemsDao {
 	int insertOrderItemsList(OrderItemsSaveQuery orderItemsSaveQuery);
 
 	List<MyPageReviewListResult> selectMyPageReviewList(MyPageReviewListQuery orderItemReviewListQuery);
-
+	
+	List<OrderItemDto> selectOrderItemsByOrderId(Integer orderId);
 
 
 
