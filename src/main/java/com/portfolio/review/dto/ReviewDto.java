@@ -41,7 +41,7 @@ public class ReviewDto {
     @Setter
 	public static class ReviewListResult {
     	private Integer reviewId;
-    	private String userName;
+    	private String nickname;
         private Integer rating;
         private String comment;
         private String reply;

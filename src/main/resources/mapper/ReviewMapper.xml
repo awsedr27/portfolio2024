@@ -24,7 +24,7 @@
 			r.comment,
 			r.reply,
 			r.create_date,
-			u.username
+			u.nickname
         FROM 
             review r
        	INNER JOIN orderItems oi ON oi.order_item_id =r.order_item_id AND oi.product_id =#{productId}

@@ -51,7 +51,6 @@ public class ProductController {
     public ResponseEntity<?> productDetail(@Valid @RequestBody ProductDetailRequest productDetailRequest,
     		HttpServletResponse httpServletResponse) {
     	try {
-    		
     		ProductDetailResult productDetail=productService.getProductInfo(productDetailRequest.getProductId());
     		if(productDetail==null) {
     			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
