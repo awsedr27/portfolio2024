@@ -17,6 +17,8 @@ public interface ProductDao {
 	ProductDetailResult selectProductDetail(Integer productId);
 	Product selectProduct(Integer productId);
 	Product selectProductWithExclusiveLock(Integer productId);
-	int updateQuantity(ProductUpdateQuantityQuery productUpdateQuantityQuery);
+	List<Product> selectProductListWithExclusiveLock(List<Integer> productIdList);
+	int updateQuantitiesMinus(List<ProductUpdateQuantityQuery> productList);
+	int updateQuantitiesPlus(List<ProductUpdateQuantityQuery> productList);
 
 }

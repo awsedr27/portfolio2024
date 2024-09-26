@@ -19,6 +19,8 @@ public interface OrderItemsDao {
 
 	OrderItemDto selectOrderItem(Integer orderItemId);
 	
+	List<OrderItemDto> selectOrderItemsWithExclusiveLockByOrderId(Integer orderId);
+	
 	int updateOrderItemForCancel(OrderItemCancelQuery orderItemCancelQuery);
 
 	int insertOrderItemsList(OrderItemsSaveQuery orderItemsSaveQuery);

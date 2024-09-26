@@ -76,5 +76,4 @@ public class ProductDto {
 	    	this.quantity=quantity;
 	    }
 	}
-    
 }

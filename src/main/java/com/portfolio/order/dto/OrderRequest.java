@@ -15,6 +15,7 @@ public class OrderRequest {
     @Getter
     @Setter
 	public static class OrderListRequest {
+        @NotBlank(message = "status cannot be blank")
         @Pattern(
             regexp = "PENDING|PROCESSING|SHIPPED|COMPLETED|CANCELLED|",
             message = "Invalid order status"
@@ -33,7 +34,11 @@ public class OrderRequest {
     @Getter
     @Setter
 	public static class OrderItemCancelRequest {
+    	@NotNull(message = "orderId cannot be null")
+        @Min(value = 1, message = "orderId must be greater than or equal to 1")
+    	private Integer orderId;
     	@NotNull(message = "orderItemId cannot be null")
+    	@Min(value = 1, message = "orderItemId must be greater than or equal to 1")
     	private Integer orderItemId;
 	}
     @Getter

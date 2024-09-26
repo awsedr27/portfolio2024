@@ -80,10 +80,50 @@
         WHERE product_id=#{productId}
         FOR UPDATE;
     </select>
-    <update id="updateQuantity" parameterType="com.portfolio.product.dto.ProductDto$ProductUpdateQuantityQuery">
-	    UPDATE product
-		SET
-	    quantity = #{quantity}
-		WHERE product_id = #{productId}
+    <select id="selectProductListWithExclusiveLock" parameterType="list" resultType="com.portfolio.product.dto.ProductDto$Product">
+	    SELECT 
+			product_id,
+			quantity,
+			name,
+			description,
+			use_yn,
+			price,
+			category_id,
+			create_date,
+			modify_date
+	    FROM product
+	    WHERE product_id IN
+	    <foreach collection="productIdList" item="productId" open="(" separator="," close=")">
+	        #{productId}
+	    </foreach>
+	    ORDER BY product_id ASC
+	    FOR UPDATE
+    </select>
+    <update id="updateQuantitiesMinus" parameterType="com.portfolio.product.dto.ProductDto$ProductUpdateQuantityQuery">
+	  UPDATE product
+	  SET quantity = quantity - CASE
+	    <foreach collection="productList" item="product" separator=" ">
+	      WHEN product_id = #{product.productId} THEN #{product.quantity}
+	    </foreach>
+	    ELSE 0
+	  END
+	  WHERE product_id IN
+	  <foreach collection="productList" item="product" open="(" separator="," close=")">
+	    #{product.productId}
+	  </foreach>
     </update>
+	<update id="updateQuantitiesPlus" parameterType="com.portfolio.product.dto.ProductDto$ProductUpdateQuantityQuery">
+	  UPDATE product
+	  SET quantity = quantity + CASE
+	    <foreach collection="productList" item="product" separator=" ">
+	      WHEN product_id = #{product.productId} THEN #{product.quantity}
+	    </foreach>
+	    ELSE 0
+	  END
+	  WHERE product_id IN
+	  <foreach collection="productList" item="product" open="(" separator="," close=")">
+	    #{product.productId}
+	  </foreach>
+	</update>
+    
 </mapper>

@@ -24,6 +24,21 @@
         FROM orderItems
         WHERE order_item_id=#{orderItemId}
     </select>
+    <select id="selectOrderItemsWithExclusiveLockByOrderId" parameterType="Int" resultType="com.portfolio.order.dto.OrderDto$OrderItemDto">
+        SELECT
+			order_item_id,
+			order_id,
+			product_id,
+			quantity,
+			price,
+			status,
+			create_date,
+			modify_date
+        FROM orderItems
+        WHERE order_id=#{orderId}
+        ORDER BY order_item_id ASC
+        FOR UPDATE
+    </select>
     <update id="updateOrderItemForCancel" parameterType="com.portfolio.order.dto.OrderDto$OrderItemCancelQuery">
 	    UPDATE orderItems
 		SET

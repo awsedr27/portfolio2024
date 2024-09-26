@@ -16,6 +16,8 @@ public interface OrderDao {
 	List<OrderListResult> selectOrderList(OrderListQuery orderListQuery);
 
 	OrderDto selectOrder(Integer orderId);
+	
+	OrderDto selectOrderWithExclusiveLock(Integer orderId);
 
 	void updateOrderForCancel(OrderCancelQuery orderCancelQuery);
 

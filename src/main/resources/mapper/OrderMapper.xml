@@ -78,6 +78,18 @@
         FROM orders
         WHERE order_id=#{orderId}
     </select>
+    <select id="selectOrderWithExclusiveLock" parameterType="Int" resultType="com.portfolio.order.dto.OrderDto">
+        SELECT
+			order_id,
+			user_id,
+			total_price,
+			status,
+			create_date,
+			modify_date
+        FROM orders
+        WHERE order_id=#{orderId}
+        FOR UPDATE
+    </select>
     <update id="updateOrderForCancel" parameterType="com.portfolio.order.dto.OrderDto$OrderCancelQuery">
 	    UPDATE orders
 		SET

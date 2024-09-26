@@ -51,6 +51,7 @@
         LEFT OUTER JOIN product p ON c.product_id=p.product_id
         LEFT OUTER JOIN file f ON c.product_id=f.reference_id AND f.reference_type='PRODUCT_IMG' AND f.use_yn='Y'
         WHERE user_id=#{userId}
+        ORDER BY c.product_id ASC
     </select>
     <update id="updateCart" parameterType="com.portfolio.cart.dto.CartDto$CartUpdateQuery">
 	    UPDATE cart
@@ -85,5 +86,6 @@
 	      <foreach item="id" collection="productIdList" open="(" separator="," close=")">
 	        #{id}
 	      </foreach>
+	   	ORDER BY c.product_id ASC
     </select>
 </mapper>

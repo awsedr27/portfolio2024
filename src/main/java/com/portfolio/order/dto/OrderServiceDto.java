@@ -46,11 +46,13 @@ public class OrderServiceDto {
     @Getter
     @Setter
 	public static class OrderItemCancelServiceDto {
+    	private Integer orderId;
     	private Integer orderItemId;
     	public OrderItemCancelServiceDto() {
     		
     	}
 		public OrderItemCancelServiceDto(OrderItemCancelRequest orderItemsCancelRequest) {
+			this.orderId=orderItemsCancelRequest.getOrderId();
 			this.orderItemId=orderItemsCancelRequest.getOrderItemId();
 		}
 

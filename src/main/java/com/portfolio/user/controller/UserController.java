@@ -134,4 +134,16 @@ public class UserController {
 		}
     
     }
+    @PostMapping("/logout")
+    public ResponseEntity<?> userLogout() {
+    	try {
+    		HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.SET_COOKIE, "refreshToken=" + "; Path=/; HttpOnly; Max-Age=0;");
+    	    return ResponseEntity.status(HttpStatus.OK).headers(headers).body("로그아웃 성공");
+    	}catch (Exception e) {
+    		log.error("로그아웃 실패 "+e.toString());
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("로그아웃 실패");
+		}
+    
+    }
 }
