@@ -99,7 +99,6 @@ public class OrderServiceImpl implements OrderService {
 		orderDao.updateOrderForCancel(orderCancelQuery);
 		OrderItemsCancelByOrderIdQuery orderItemsCancelByOrderIdQuery=new OrderItemsCancelByOrderIdQuery(orderCancelServiceDto.getOrderId());
 		orderItemsDao.updateOrderItemsForCancelByOrderId(orderItemsCancelByOrderIdQuery);
-		
 		return productDao.updateQuantitiesPlus(productList);
 	}
 
