@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -37,23 +36,17 @@ import com.portfolio.product.dao.ProductDao;
 import com.portfolio.product.dto.ProductDto.Product;
 import com.portfolio.product.dto.ProductDto.ProductUpdateQuantityQuery;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 	
-	@Autowired
-	OrderDao orderDao;
-	
-	@Autowired
-	OrderItemsDao orderItemsDao;
-
-	@Autowired
-	UserContext userContext;
-	
-	@Autowired
-	ProductDao productDao;
-	
-	@Autowired
-	CartDao cartDao;
+	private final OrderDao orderDao;
+	private final OrderItemsDao orderItemsDao;
+	private final UserContext userContext;
+	private final ProductDao productDao;
+	private final CartDao cartDao;
 	
     @Value("${order.paging.size}")
     private int pagingSize;
@@ -155,20 +148,23 @@ public class OrderServiceImpl implements OrderService {
 		int totalPrice=0;
 		//배달비 고정->거리에따른 배달비기획으로 고도화가능
 		int deliveryPrice=4000;
-		List<Integer> productIdList = orderSaveServiceDto.getOrderItems().stream()
-                .map(OrderItemSaveServiceDTO::getProductId)
-                .collect(Collectors.toList());
+		List<Integer> productIdList=new ArrayList<Integer>();
+		for(int i=0;i<orderSaveServiceDto.getOrderItems().size();i++) {
+			productIdList.add(orderSaveServiceDto.getOrderItems().get(i).getProductId());
+		}
     	List<Product> productList=productDao.selectProductListWithExclusiveLock(productIdList);
 		String userId=userContext.getUserInfo().getUserId();
 		List<ProductUpdateQuantityQuery> quantityUpdateQuery=new ArrayList<ProductUpdateQuantityQuery>();
 		List<OrderItemSaveQuery> orderItemSaveQuery = new ArrayList<>();
 		
 		for (OrderItemSaveServiceDTO orderItem : orderSaveServiceDto.getOrderItems()) {
-		    Product matchingProduct = productList.stream()
-		        .filter(product -> product.getProductId().equals(orderItem.getProductId()))
-		        .findFirst()
-		        .orElse(null);
-		    
+			 Product matchingProduct = null; 
+			    for (Product product : productList) {
+			        if (product.getProductId().equals(orderItem.getProductId())) {
+			            matchingProduct = product;
+			            break; 
+			        }
+			    }  
 		    if (matchingProduct != null) {
 	        	if("N".equals(matchingProduct.getUseYn())) {
 	        		throw new CustomException("현재 판매가 중지된 상품입니다");
@@ -176,8 +172,10 @@ public class OrderServiceImpl implements OrderService {
 		        if (orderItem.getQuantity() > matchingProduct.getQuantity()) {
 		        	throw new CustomException("주문 수량이 부족합니다");
 		        }
-		        quantityUpdateQuery.add(new ProductUpdateQuantityQuery(orderItem.getProductId(), orderItem.getQuantity()));
-	        	orderItemSaveQuery.add(new OrderItemSaveQuery(orderItem.getProductId(),orderItem.getQuantity(),matchingProduct.getPrice()));
+		        quantityUpdateQuery.add(new ProductUpdateQuantityQuery(orderItem.getProductId(),
+		        		orderItem.getQuantity()));
+	        	orderItemSaveQuery.add(new OrderItemSaveQuery(orderItem.getProductId(),
+	        			orderItem.getQuantity(),matchingProduct.getPrice()));
 	        	totalPrice+=(matchingProduct.getPrice()*orderItem.getQuantity());
 		    } else {
 		    	throw new CustomException("존재하지 않는 상품입니다");

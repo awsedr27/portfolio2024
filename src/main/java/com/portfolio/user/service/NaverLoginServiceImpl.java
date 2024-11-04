@@ -1,9 +1,6 @@
 package com.portfolio.user.service;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,30 +11,35 @@ import org.springframework.web.client.RestTemplate;
 
 import com.portfolio.exception.CustomException;
 import com.portfolio.user.dao.UserDao;
-import com.portfolio.user.dto.UserResponse;
 import com.portfolio.user.dto.UserDto.NaverUserProfile;
 import com.portfolio.user.dto.UserDto.User;
+import com.portfolio.user.dto.UserResponse;
 import com.portfolio.user.dto.UserResponse.NaverTokenResponse;
 import com.portfolio.utils.JwtUtil;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class NaverLoginServiceImpl implements NaverLoginService {
     
+	@Value("${naver.client.token.url}")
+    private String tokenRequestUrl;
 	
 	@Value("${naver.client.id}")
     private String clientId;
 
     @Value("${naver.client.secret}")
     private String clientSecret;
-
-    @Autowired
-    private UserDao userDao;
     
-    @Autowired
-    private JwtUtil jwtUtil;
+    @Value("${naver.client.profile.url}")
+    private String naverProfileUrl;
+
+    private final UserDao userDao;
+    private final JwtUtil jwtUtil;
 
 	public String getAccessToken(String code, String state) throws Exception {
-		String tokenUrl = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code" + "&client_id="
+		String tokenUrl = tokenRequestUrl + "&client_id="
 				+ clientId + "&client_secret=" + clientSecret + "&code=" + code
 				+ "&state=" + state;
 
@@ -49,7 +51,7 @@ public class NaverLoginServiceImpl implements NaverLoginService {
 
 
 	public NaverUserProfile getUserProfile(String accessToken) throws Exception {
-        String profileUrl = "https://openapi.naver.com/v1/nid/me";
+        String profileUrl = naverProfileUrl;
         
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -76,10 +78,6 @@ public class NaverLoginServiceImpl implements NaverLoginService {
         }else {
         	userInfoRq.setUserId(userInfo.getUserId());
         	if("N".equals(userInfo.getUseYn())) {
-        		//활성화로 업데이트 
-            	//UserInfo userInfoRq=new UserInfo(naverUserProfile.getResponse());
-//            	userInfoRq.setUseYn("Y");
-//        		userDao.updateUser(userInfoRq);
         		throw new CustomException("사용이 중지된 아이디입니다");
         	}
         }

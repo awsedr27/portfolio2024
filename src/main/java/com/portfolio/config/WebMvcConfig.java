@@ -1,6 +1,5 @@
 package com.portfolio.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -9,14 +8,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.portfolio.intercepter.Intercepter;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @Slf4j
+@RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
-
-    @Autowired
-    private Intercepter Interceptor;
+    
+	private final Intercepter Interceptor;
     
 	@Value("${img.upload.dir}")
     private String imageDir;

@@ -28,7 +28,6 @@ public class TransactionAspect {
 
     @Around("serviceMethods()")
     public Object applyTransaction(ProceedingJoinPoint joinPoint) throws Throwable {
-    	//log.info("트랜잭션실행");
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setTimeout(30);  
         TransactionStatus status = transactionManager.getTransaction(def);
